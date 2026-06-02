@@ -1,112 +1,104 @@
-const ICONS={mail:'✉',scan:'▣',topology:'⌬',shield:'◈',world:'◎',bolt:'ϟ',map:'⌖',cert:'▤',function:'ƒ'};
+const ICONS={mail:'✉',scan:'▣',topology:'⌬',shield:'◈',world:'◎',bolt:'ϟ',map:'⌖',cert:'▤',function:'☰'};
 
 const PAGES=[
   {id:'dns',label:'DNS & Email',icon:'mail',color:'c-blue',sub:'DNS, Blacklist, SMTP, SPF, DKIM, DMARC',tools:[
-    {name:'MXToolbox',url:'https://mxtoolbox.com',color:'c-blue',desc:'DNS Lookup, Blacklist, SMTP Test ครบวงจร',tags:['DNS','Blacklist','SMTP','Email'],pricing:'ฟรี / มี Pro',difficulty:'ง่าย',type:'Web Tool'},
-    {name:'DNSChecker',url:'https://dnschecker.org',color:'c-blue',desc:'ตรวจสอบ DNS Propagation จากหลายประเทศทั่วโลก',tags:['DNS','Propagation','Global'],pricing:'ฟรี',difficulty:'ง่าย',type:'DNS Tool'},
-    {name:'Mail Tester',url:'https://www.mail-tester.com',color:'c-blue',desc:'ทดสอบคะแนนความน่าเชื่อถือของ Email และ Spam Score',tags:['Email','SPF','DKIM','DMARC'],pricing:'ฟรีจำกัดครั้ง',difficulty:'ง่าย',type:'Email Tester'},
-    {name:'DMARC Inspector',url:'https://dmarcian.com/dmarc-inspector/',color:'c-blue',desc:'วิเคราะห์ DMARC Record และอธิบาย Policy แบบอ่านง่าย',tags:['DMARC','Email Security','DNS'],pricing:'ฟรี',difficulty:'ปานกลาง',type:'DNS Analyzer'},
-    {name:'SPF Validator',url:'https://www.kitterman.com/spf/validate.html',color:'c-blue',desc:'ตรวจสอบ Syntax และ Lookup Count ของ SPF Record',tags:['SPF','Email','DNS'],pricing:'ฟรี',difficulty:'ปานกลาง',type:'DNS Validator'},
-    {name:'Ping.eu',url:'https://ping.eu',color:'c-blue',desc:'รวม Ping, Traceroute, WHOIS, DNS Lookup และ Port Check',tags:['Ping','DNS','WHOIS'],pricing:'ฟรี',difficulty:'ง่าย',type:'Network Tools'},
-    {name:'MXToolbox SMTP',url:'https://mxtoolbox.com/diagnostic.aspx',color:'c-blue',desc:'ทดสอบ SMTP Server แบบ Step-by-step',tags:['SMTP','Email','Diagnostic'],pricing:'ฟรี',difficulty:'ปานกลาง',type:'SMTP Tester'},
-    {name:'EasyDMARC',url:'https://easydmarc.com/tools/dmarc-lookup',color:'c-blue',desc:'วิเคราะห์ DMARC, DKIM, SPF, MX และ Blacklist',tags:['DMARC','DKIM','SPF'],pricing:'ฟรี',difficulty:'ง่าย',type:'Email Security'}
+    t('MXToolbox','https://mxtoolbox.com','DNS Lookup, Blacklist, SMTP Test ครบวงจร',['DNS','Blacklist','SMTP','Email'],'ฟรี / มี Pro','ง่าย','Web Tool','ใช้ตรวจสุขภาพ DNS และระบบอีเมล เช่น MX, SPF, DKIM, DMARC, SMTP และ Blacklist'),
+    t('DNSChecker','https://dnschecker.org','ตรวจสอบ DNS Propagation จากหลายประเทศทั่วโลก',['DNS','Propagation','Global'],'ฟรี','ง่าย','DNS Tool','ใช้ดูว่า DNS ที่แก้ไข เช่น A, MX, CNAME, TXT กระจายไปทั่วโลกแล้วหรือยัง'),
+    t('Mail Tester','https://www.mail-tester.com','ทดสอบคะแนนความน่าเชื่อถือของ Email และ Spam Score',['Email','SPF','DKIM','DMARC'],'ฟรีจำกัดครั้ง','ง่าย','Email Tester','ใช้ส่งอีเมลทดสอบแล้วดูคะแนนว่าอีเมลมีโอกาสเข้า Inbox หรือ Spam'),
+    t('DMARC Inspector','https://dmarcian.com/dmarc-inspector/','วิเคราะห์ DMARC Record และอธิบาย Policy แบบอ่านง่าย',['DMARC','Email Security','DNS'],'ฟรี','ปานกลาง','DNS Analyzer','ใช้ตรวจ DMARC policy เช่น p=none/quarantine/reject และที่อยู่อีเมลรับ report'),
+    t('SPF Validator','https://www.kitterman.com/spf/validate.html','ตรวจสอบ Syntax และ Lookup Count ของ SPF Record',['SPF','Email','DNS'],'ฟรี','ปานกลาง','DNS Validator','ใช้ดูว่า SPF เขียนถูกไหม และ lookup เกิน limit 10 ครั้งหรือไม่'),
+    t('Ping.eu','https://ping.eu','รวม Ping, Traceroute, WHOIS, DNS Lookup และ Port Check',['Ping','DNS','WHOIS'],'ฟรี','ง่าย','Network Tools','ใช้ทดสอบ network พื้นฐานจากภายนอก เช่น ping, trace, whois และ port'),
+    t('MXToolbox SMTP','https://mxtoolbox.com/diagnostic.aspx','ทดสอบ SMTP Server แบบ Step-by-step',['SMTP','Email','Diagnostic'],'ฟรี','ปานกลาง','SMTP Tester','ใช้ตรวจว่า mail server ติดต่อได้ไหม มี TLS ไหม และตอบ SMTP ถูกต้องหรือไม่'),
+    t('EasyDMARC','https://easydmarc.com/tools/dmarc-lookup','วิเคราะห์ DMARC, DKIM, SPF, MX และ Blacklist',['DMARC','DKIM','SPF'],'ฟรี','ง่าย','Email Security','ใช้รวมเครื่องมือ email security หลายตัวไว้ในที่เดียว')
   ]},
   {id:'portscan',label:'Port Scan & WHOIS',icon:'scan',color:'c-orange',sub:'Port Scan, Traceroute, WHOIS, Nmap ออนไลน์',tools:[
-    {name:'HackerTarget Nmap',url:'https://hackertarget.com/nmap-online-port-scanner/',color:'c-orange',desc:'Online Nmap Port Scanner สำหรับตรวจพอร์ตจากภายนอก',tags:['Nmap','Port Scan','Security'],pricing:'ฟรี',difficulty:'ปานกลาง',type:'Port Scanner'},
-    {name:'PortChecker.co',url:'https://portchecker.co',color:'c-orange',desc:'ตรวจสอบว่า Port ของ IP หรือ Server เปิดจากภายนอกหรือไม่',tags:['Port','Firewall','Network'],pricing:'ฟรี',difficulty:'ง่าย',type:'Port Checker'},
-    {name:'WHOIS Lookup',url:'https://www.whois.com/whois/',color:'c-orange',desc:'ค้นหาข้อมูล Domain, IP, Registrar, Name Server และวันหมดอายุ',tags:['WHOIS','Domain','IP'],pricing:'ฟรี',difficulty:'ง่าย',type:'WHOIS'},
-    {name:'Traceroute.org',url:'https://www.traceroute.org',color:'c-orange',desc:'รวม Looking Glass สำหรับ Ping, Traceroute และ BGP จากหลาย ISP',tags:['Traceroute','BGP','Looking Glass'],pricing:'ฟรี',difficulty:'ปานกลาง',type:'Network'},
-    {name:'Shodan',url:'https://www.shodan.io',color:'c-orange',desc:'Search Engine สำหรับอุปกรณ์และ Service ที่เชื่อมต่อ Internet',tags:['IoT','Security','Search'],pricing:'ฟรีจำกัด',difficulty:'ปานกลาง',type:'Security Search'},
-    {name:'HackerTarget WHOIS',url:'https://hackertarget.com/whois-lookup/',color:'c-orange',desc:'WHOIS และ Reverse IP Lookup สำหรับงานตรวจสอบโดเมน/IP',tags:['WHOIS','Reverse IP'],pricing:'ฟรี',difficulty:'ง่าย',type:'WHOIS / Recon'},
-    {name:'YouGetSignal',url:'https://www.yougetsignal.com/tools/open-ports/',color:'c-orange',desc:'ตรวจ Open Port และ Reverse IP Lookup',tags:['Port','Reverse IP'],pricing:'ฟรี',difficulty:'ง่าย',type:'Port Checker'},
-    {name:'Network-Tools.com',url:'https://network-tools.com',color:'c-orange',desc:'รวม WHOIS, Traceroute, Ping, DNS และ HTTP Header Check',tags:['Network','Ping','WHOIS'],pricing:'ฟรี',difficulty:'ง่าย',type:'Network Toolbox'}
+    t('HackerTarget Nmap','https://hackertarget.com/nmap-online-port-scanner/','Online Nmap Port Scanner สำหรับตรวจพอร์ตจากภายนอก',['Nmap','Port Scan','Security'],'ฟรี','ปานกลาง','Port Scanner','ใช้สแกนพอร์ตที่เปิดของ Server จากมุมมอง Internet'),
+    t('PortChecker.co','https://portchecker.co','ตรวจสอบว่า Port ของ IP หรือ Server เปิดจากภายนอกหรือไม่',['Port','Firewall','Network'],'ฟรี','ง่าย','Port Checker','ใช้เช็ก firewall rule หรือ port forwarding ว่าปล่อยพอร์ตสำเร็จไหม'),
+    t('WHOIS Lookup','https://www.whois.com/whois/','ค้นหาข้อมูล Domain, IP, Registrar, Name Server และวันหมดอายุ',['WHOIS','Domain','IP'],'ฟรี','ง่าย','WHOIS','ใช้ดูเจ้าของโดเมน registrar nameserver วันจดทะเบียน และวันหมดอายุ'),
+    t('Traceroute.org','https://www.traceroute.org','รวม Looking Glass สำหรับ Ping, Traceroute และ BGP จากหลาย ISP',['Traceroute','BGP','Looking Glass'],'ฟรี','ปานกลาง','Network','ใช้ตรวจเส้นทาง packet จาก network หรือ ISP หลายแห่งทั่วโลก'),
+    t('Shodan','https://www.shodan.io','Search Engine สำหรับอุปกรณ์และ Service ที่เชื่อมต่อ Internet',['IoT','Security','Search'],'ฟรีจำกัด','ปานกลาง','Security Search','ใช้ค้นหา service/device ที่ expose บน Internet และดู banner/version'),
+    t('HackerTarget WHOIS','https://hackertarget.com/whois-lookup/','WHOIS และ Reverse IP Lookup สำหรับงานตรวจสอบโดเมน/IP',['WHOIS','Reverse IP'],'ฟรี','ง่าย','WHOIS / Recon','ใช้ดู whois และ domain ที่อาจอยู่บน IP เดียวกัน'),
+    t('YouGetSignal','https://www.yougetsignal.com/tools/open-ports/','ตรวจ Open Port และ Reverse IP Lookup',['Port','Reverse IP'],'ฟรี','ง่าย','Port Checker','ใช้ตรวจพอร์ตแบบเร็วและดู reverse IP ของ hosting'),
+    t('Network-Tools.com','https://network-tools.com','รวม WHOIS, Traceroute, Ping, DNS และ HTTP Header Check',['Network','Ping','WHOIS'],'ฟรี','ง่าย','Network Toolbox','ใช้เป็นชุดเครื่องมือ network diagnostic พื้นฐานในหน้าเดียว')
   ]},
   {id:'asn',label:'ASN / BGP / IX',icon:'topology',color:'c-purple',sub:'ASN Lookup, BGP Route, Prefix, Internet Exchange',tools:[
-    {name:'BGP.he.net',url:'https://bgp.he.net',color:'c-purple',desc:'Hurricane Electric BGP Toolkit ดู ASN, Prefix, Peer และ IX',tags:['ASN','BGP','Routing'],pricing:'ฟรี',difficulty:'ปานกลาง',type:'BGP Toolkit'},
-    {name:'IPinfo.io',url:'https://ipinfo.io',color:'c-purple',desc:'ดูข้อมูล IP, ASN, ISP, Geolocation และ Privacy Detection',tags:['IP','ASN','Geolocation'],pricing:'ฟรี / API',difficulty:'ง่าย',type:'IP Intelligence'},
-    {name:'BGPView',url:'https://bgpview.io',color:'c-purple',desc:'BGP Route, Prefix, ASN, Upstream และ Downstream Explorer',tags:['ASN','BGP','Prefix'],pricing:'ฟรี',difficulty:'ง่าย',type:'BGP Explorer'},
-    {name:'PeeringDB',url:'https://www.peeringdb.com',color:'c-purple',desc:'ฐานข้อมูล Internet Exchange, Facility และ Peering Policy',tags:['IX','Peering','BGP'],pricing:'ฟรี',difficulty:'ปานกลาง',type:'Peering Database'},
-    {name:'RIPE Stat',url:'https://stat.ripe.net',color:'c-purple',desc:'ดูสถิติ BGP, RIR Data, RPKI และ Route History',tags:['RIPE','BGP','Statistics'],pricing:'ฟรี',difficulty:'สูง',type:'RIR Data'},
-    {name:'ARIN WHOIS',url:'https://search.arin.net/rdap/',color:'c-purple',desc:'ค้นหา IP Address และ ASN Registry สำหรับโซนอเมริกา',tags:['ARIN','WHOIS','IP Registry'],pricing:'ฟรี',difficulty:'ง่าย',type:'IP Registry'},
-    {name:'RouteViews',url:'https://www.routeviews.org',color:'c-purple',desc:'ดู Global BGP Routing Table จาก Route Collector',tags:['BGP','Route','Academic'],pricing:'ฟรี',difficulty:'สูง',type:'BGP Collector'},
-    {name:'AS Rank',url:'https://asrank.caida.org',color:'c-purple',desc:'จัดอันดับ ASN และดู Provider/Customer Relationship',tags:['ASN','Rank','Research'],pricing:'ฟรี',difficulty:'ปานกลาง',type:'BGP Research'}
+    t('BGP.he.net','https://bgp.he.net','Hurricane Electric BGP Toolkit ดู ASN, Prefix, Peer และ IX',['ASN','BGP','Routing'],'ฟรี','ปานกลาง','BGP Toolkit','ใช้วิเคราะห์ ASN, prefix, peer, upstream/downstream และ internet exchange'),
+    t('IPinfo.io','https://ipinfo.io','ดูข้อมูล IP, ASN, ISP, Geolocation และ Privacy Detection',['IP','ASN','Geolocation'],'ฟรี / API','ง่าย','IP Intelligence','ใช้ดูว่า IP เป็นของ ISP/องค์กรไหน อยู่ประเทศไหน และเป็น VPN/proxy ไหม'),
+    t('BGPView','https://bgpview.io','BGP Route, Prefix, ASN, Upstream และ Downstream Explorer',['ASN','BGP','Prefix'],'ฟรี','ง่าย','BGP Explorer','ใช้ดู route, prefix, AS path และความสัมพันธ์ของ provider'),
+    t('PeeringDB','https://www.peeringdb.com','ฐานข้อมูล Internet Exchange, Facility และ Peering Policy',['IX','Peering','BGP'],'ฟรี','ปานกลาง','Peering Database','ใช้ดูว่า network เชื่อมต่อ IX ไหน มี policy peering แบบใด'),
+    t('RIPE Stat','https://stat.ripe.net','ดูสถิติ BGP, RIR Data, RPKI และ Route History',['RIPE','BGP','Statistics'],'ฟรี','สูง','RIR Data','ใช้ดูข้อมูลเชิงลึกของ IP/ASN เช่น history, RPKI, abuse contact'),
+    t('ARIN WHOIS','https://search.arin.net/rdap/','ค้นหา IP Address และ ASN Registry สำหรับโซนอเมริกา',['ARIN','WHOIS','IP Registry'],'ฟรี','ง่าย','IP Registry','ใช้ตรวจข้อมูล registry ของ IP/ASN ในเขต ARIN'),
+    t('RouteViews','https://www.routeviews.org','ดู Global BGP Routing Table จาก Route Collector',['BGP','Route','Academic'],'ฟรี','สูง','BGP Collector','ใช้ดู routing table จริงจาก collector หลายจุดทั่วโลก'),
+    t('AS Rank','https://asrank.caida.org','จัดอันดับ ASN และดู Provider/Customer Relationship',['ASN','Rank','Research'],'ฟรี','ปานกลาง','BGP Research','ใช้ดูขนาดและความสำคัญของ ASN จาก customer cone')
   ]},
   {id:'ipleak',label:'IP / DNS / WebRTC Leak',icon:'shield',color:'c-red',sub:'ตรวจสอบ IP Leak, DNS Leak, WebRTC Leak',tools:[
-    {name:'ipleak.net',url:'https://ipleak.net',color:'c-red',desc:'ตรวจ IP, DNS, WebRTC และ Torrent IP Leak',tags:['VPN','DNS Leak','WebRTC'],pricing:'ฟรี',difficulty:'ง่าย',type:'Privacy Test'},
-    {name:'BrowserLeaks',url:'https://browserleaks.com',color:'c-red',desc:'ตรวจ Browser Fingerprint, WebRTC, Canvas, WebGL และ Font Leak',tags:['Browser','Fingerprint','Privacy'],pricing:'ฟรี',difficulty:'ปานกลาง',type:'Browser Privacy'},
-    {name:'DNS Leak Test',url:'https://www.dnsleaktest.com',color:'c-red',desc:'ทดสอบ DNS Leak แบบ Standard และ Extended',tags:['DNS','VPN','Leak'],pricing:'ฟรี',difficulty:'ง่าย',type:'DNS Test'},
-    {name:'WhatIsMyIPAddress',url:'https://whatismyipaddress.com',color:'c-red',desc:'ดู Public IP, ISP, Location, Hostname และ Blacklist Status',tags:['IP','ISP','Geolocation'],pricing:'ฟรี',difficulty:'ง่าย',type:'IP Lookup'},
-    {name:'Whoer.net',url:'https://whoer.net',color:'c-red',desc:'ตรวจ Anonymity Score, IP, DNS, Timezone และ WebRTC',tags:['Anonymity','VPN','Privacy'],pricing:'ฟรี',difficulty:'ง่าย',type:'Privacy Score'},
-    {name:'Cloudflare Help',url:'https://1.1.1.1/help',color:'c-red',desc:'ตรวจ 1.1.1.1, DoH, DNSSEC และ ECH/ESNI',tags:['Cloudflare','DoH','DNS'],pricing:'ฟรี',difficulty:'ง่าย',type:'DNS Checker'},
-    {name:'IPLeak EU',url:'https://www.ipleak.eu',color:'c-red',desc:'ตรวจ IP และ DNS Leak จากมุมมอง EU Server',tags:['IP Leak','DNS','EU'],pricing:'ฟรี',difficulty:'ง่าย',type:'Privacy Test'},
-    {name:'DoILeak',url:'https://www.doileak.com',color:'c-red',desc:'ตรวจ WebRTC, Java, Flash และ Browser Information Leak',tags:['WebRTC','Privacy','Leak'],pricing:'ฟรี',difficulty:'ง่าย',type:'Leak Detector'}
+    t('ipleak.net','https://ipleak.net','ตรวจ IP, DNS, WebRTC และ Torrent IP Leak',['VPN','DNS Leak','WebRTC'],'ฟรี','ง่าย','Privacy Test','ใช้ตรวจว่า IP จริงหรือ DNS จริงรั่วออกไปเมื่อใช้ VPN หรือ proxy หรือไม่'),
+    t('BrowserLeaks','https://browserleaks.com','ตรวจ Browser Fingerprint, WebRTC, Canvas, WebGL และ Font Leak',['Browser','Fingerprint','Privacy'],'ฟรี','ปานกลาง','Browser Privacy','ใช้ดูข้อมูลที่ browser เปิดเผยและใช้ fingerprint ระบุตัวตน'),
+    t('DNS Leak Test','https://www.dnsleaktest.com','ทดสอบ DNS Leak แบบ Standard และ Extended',['DNS','VPN','Leak'],'ฟรี','ง่าย','DNS Test','ใช้ดูว่า DNS query ออกผ่าน DNS ของ VPN หรือหลุดไปที่ ISP'),
+    t('WhatIsMyIPAddress','https://whatismyipaddress.com','ดู Public IP, ISP, Location, Hostname และ Blacklist Status',['IP','ISP','Geolocation'],'ฟรี','ง่าย','IP Lookup','ใช้ดู IP ปัจจุบันและข้อมูล ISP/location แบบอ่านง่าย'),
+    t('Whoer.net','https://whoer.net','ตรวจ Anonymity Score, IP, DNS, Timezone และ WebRTC',['Anonymity','VPN','Privacy'],'ฟรี','ง่าย','Privacy Score','ใช้ประเมินความเป็นส่วนตัว เช่น timezone mismatch, DNS leak, WebRTC leak'),
+    t('Cloudflare Help','https://1.1.1.1/help','ตรวจ 1.1.1.1, DoH, DNSSEC และ ECH/ESNI',['Cloudflare','DoH','DNS'],'ฟรี','ง่าย','DNS Checker','ใช้ตรวจว่า browser/network ใช้ Cloudflare DNS และ DoH หรือไม่'),
+    t('IPLeak EU','https://www.ipleak.eu','ตรวจ IP และ DNS Leak จากมุมมอง EU Server',['IP Leak','DNS','EU'],'ฟรี','ง่าย','Privacy Test','ใช้เปรียบเทียบผล IP/DNS จาก server ในยุโรป'),
+    t('DoILeak','https://www.doileak.com','ตรวจ WebRTC, Java, Flash และ Browser Information Leak',['WebRTC','Privacy','Leak'],'ฟรี','ง่าย','Leak Detector','ใช้ตรวจช่องทาง leak ของ browser หลายแบบในหน้าเดียว')
   ]},
   {id:'dnsprop',label:'DNS Propagation',icon:'world',color:'c-teal',sub:'ตรวจสอบ DNS Propagation ทั่วโลก',tools:[
-    {name:'DNSChecker.org',url:'https://dnschecker.org',color:'c-teal',desc:'เช็ก DNS Propagation จาก 100+ Location',tags:['DNS','Propagation','Global'],pricing:'ฟรี',difficulty:'ง่าย',type:'DNS Propagation'},
-    {name:'WhatsMyDNS',url:'https://www.whatsmydns.net',color:'c-teal',desc:'ตรวจ DNS Propagation ทุก Record Type',tags:['DNS','Records','Global'],pricing:'ฟรี',difficulty:'ง่าย',type:'DNS Check'},
-    {name:'ViewDNS.info',url:'https://viewdns.info',color:'c-teal',desc:'รวม DNS Tools เช่น Reverse DNS, IP History, WHOIS และ Propagation',tags:['DNS','WHOIS','IP History'],pricing:'ฟรี',difficulty:'ง่าย',type:'DNS Toolbox'},
-    {name:'IntoDNS',url:'https://intodns.com',color:'c-teal',desc:'วิเคราะห์ DNS Configuration พร้อม Error และ Warning',tags:['DNS','Config','Analysis'],pricing:'ฟรี',difficulty:'ปานกลาง',type:'DNS Analyzer'},
-    {name:'NS Lookup',url:'https://www.nslookup.io',color:'c-teal',desc:'Online DNS Lookup รองรับหลาย Record Type',tags:['DNS','Lookup','Records'],pricing:'ฟรี',difficulty:'ง่าย',type:'DNS Lookup'},
-    {name:'DNSViz',url:'https://dnsviz.net',color:'c-teal',desc:'Visualize DNSSEC Chain แบบกราฟิก',tags:['DNSSEC','DNS','Graph'],pricing:'ฟรี',difficulty:'สูง',type:'DNSSEC Visualizer'},
-    {name:'MXToolbox DNS',url:'https://mxtoolbox.com/DNSLookup.aspx',color:'c-teal',desc:'DNS Lookup ทุก Record Type พร้อม TTL และ Authoritative NS',tags:['DNS','MXToolbox','TTL'],pricing:'ฟรี',difficulty:'ง่าย',type:'DNS Lookup'},
-    {name:'DNS.Watch',url:'https://dns.watch',color:'c-teal',desc:'Public DNS Resolver ที่เน้น Privacy และ No-Log',tags:['DNS','Privacy','Public DNS'],pricing:'ฟรี',difficulty:'ง่าย',type:'Public DNS'}
+    t('DNSChecker.org','https://dnschecker.org','เช็ก DNS Propagation จาก 100+ Location',['DNS','Propagation','Global'],'ฟรี','ง่าย','DNS Propagation','ใช้เช็กว่า DNS update กระจายไป resolver ทั่วโลกครบหรือยัง'),
+    t('WhatsMyDNS','https://www.whatsmydns.net','ตรวจ DNS Propagation ทุก Record Type',['DNS','Records','Global'],'ฟรี','ง่าย','DNS Check','ใช้ตรวจ record หลายชนิด เช่น A, AAAA, MX, CNAME, TXT, NS, CAA'),
+    t('ViewDNS.info','https://viewdns.info','รวม DNS Tools เช่น Reverse DNS, IP History, WHOIS และ Propagation',['DNS','WHOIS','IP History'],'ฟรี','ง่าย','DNS Toolbox','ใช้ตรวจ DNS, IP history, reverse IP และ report หลายแบบ'),
+    t('IntoDNS','https://intodns.com','วิเคราะห์ DNS Configuration พร้อม Error และ Warning',['DNS','Config','Analysis'],'ฟรี','ปานกลาง','DNS Analyzer','ใช้ตรวจปัญหา DNS config เช่น NS, SOA, MX, glue record'),
+    t('NS Lookup','https://www.nslookup.io','Online DNS Lookup รองรับหลาย Record Type',['DNS','Lookup','Records'],'ฟรี','ง่าย','DNS Lookup','ใช้ query DNS record แบบง่ายและอ่านผลเป็นระเบียบ'),
+    t('DNSViz','https://dnsviz.net','Visualize DNSSEC Chain แบบกราฟิก',['DNSSEC','DNS','Graph'],'ฟรี','สูง','DNSSEC Visualizer','ใช้ debug DNSSEC trust chain และ DS/DNSKEY error'),
+    t('MXToolbox DNS','https://mxtoolbox.com/DNSLookup.aspx','DNS Lookup ทุก Record Type พร้อม TTL และ Authoritative NS',['DNS','MXToolbox','TTL'],'ฟรี','ง่าย','DNS Lookup','ใช้ดูค่า DNS record และ TTL พร้อมลิงก์ไปเครื่องมืออื่น'),
+    t('DNS.Watch','https://dns.watch','Public DNS Resolver ที่เน้น Privacy และ No-Log',['DNS','Privacy','Public DNS'],'ฟรี','ง่าย','Public DNS','ใช้เป็นข้อมูล reference สำหรับ public DNS ที่ไม่เน้น tracking')
   ]},
   {id:'speed',label:'Speed & Latency',icon:'bolt',color:'c-yellow',sub:'ทดสอบความเร็วอินเทอร์เน็ต, Latency, Jitter',tools:[
-    {name:'Speedtest by Ookla',url:'https://www.speedtest.net',color:'c-yellow',desc:'วัด Download, Upload, Ping, Jitter และ Packet Loss',tags:['Speed','Ping','Ookla'],pricing:'ฟรี',difficulty:'ง่าย',type:'Speed Test'},
-    {name:'Fast.com',url:'https://fast.com',color:'c-yellow',desc:'Speed Test แบบง่ายโดย Netflix CDN',tags:['Speed','Netflix','CDN'],pricing:'ฟรี',difficulty:'ง่าย',type:'Speed Test'},
-    {name:'Cloudflare Speed',url:'https://speed.cloudflare.com',color:'c-yellow',desc:'วัด Speed, Latency Loaded/Unloaded, Jitter และ Packet Loss',tags:['Cloudflare','Latency','Jitter'],pricing:'ฟรี',difficulty:'ง่าย',type:'Speed Test'},
-    {name:'nPerf',url:'https://www.nperf.com',color:'c-yellow',desc:'Speed Test พร้อมเปรียบเทียบ ISP และดู Coverage Map',tags:['Speed','ISP','Map'],pricing:'ฟรี',difficulty:'ง่าย',type:'ISP Test'},
-    {name:'Bandwidth Place',url:'https://www.bandwidthplace.com',color:'c-yellow',desc:'Speed Test ผ่าน Browser พร้อมเลือก Server ได้',tags:['Speed','Bandwidth','Server'],pricing:'ฟรี',difficulty:'ง่าย',type:'Speed Test'},
-    {name:'Measurement Lab',url:'https://speed.measurementlab.net',color:'c-yellow',desc:'Open Source NDT Speed Test สำหรับงานวิจัย',tags:['Open Source','NDT','Research'],pricing:'ฟรี',difficulty:'ง่าย',type:'Speed Test'},
-    {name:'LibreSpeed',url:'https://librespeed.org',color:'c-yellow',desc:'HTML5 Speed Test แบบ Open Source และ Self-host ได้',tags:['Open Source','HTML5','Self-host'],pricing:'ฟรี',difficulty:'ง่าย',type:'Speed Test'},
-    {name:'SpeedOf.Me',url:'https://speedof.me',color:'c-yellow',desc:'HTML5 Speed Test พร้อม Graph Real-time',tags:['HTML5','CDN','Mobile'],pricing:'ฟรี',difficulty:'ง่าย',type:'Speed Test'}
+    t('Speedtest by Ookla','https://www.speedtest.net','วัด Download, Upload, Ping, Jitter และ Packet Loss',['Speed','Ping','Ookla'],'ฟรี','ง่าย','Speed Test','ใช้วัดความเร็ว internet มาตรฐานและเลือก server ทดสอบได้'),
+    t('Fast.com','https://fast.com','Speed Test แบบง่ายโดย Netflix CDN',['Speed','Netflix','CDN'],'ฟรี','ง่าย','Speed Test','ใช้วัด download speed แบบเร็วโดยอิง Netflix CDN'),
+    t('Cloudflare Speed','https://speed.cloudflare.com','วัด Speed, Latency Loaded/Unloaded, Jitter และ Packet Loss',['Cloudflare','Latency','Jitter'],'ฟรี','ง่าย','Speed Test','ใช้ดูคุณภาพเน็ตละเอียดกว่า speed test ปกติ โดยเฉพาะ latency under load'),
+    t('nPerf','https://www.nperf.com','Speed Test พร้อมเปรียบเทียบ ISP และดู Coverage Map',['Speed','ISP','Map'],'ฟรี','ง่าย','ISP Test','ใช้วัด speed และเทียบคุณภาพ ISP ในพื้นที่'),
+    t('Bandwidth Place','https://www.bandwidthplace.com','Speed Test ผ่าน Browser พร้อมเลือก Server ได้',['Speed','Bandwidth','Server'],'ฟรี','ง่าย','Speed Test','ใช้ทดสอบ bandwidth จาก server หลายจุด'),
+    t('Measurement Lab','https://speed.measurementlab.net','Open Source NDT Speed Test สำหรับงานวิจัย',['Open Source','NDT','Research'],'ฟรี','ง่าย','Speed Test','ใช้วัด speed แบบ open data และ protocol NDT'),
+    t('LibreSpeed','https://librespeed.org','HTML5 Speed Test แบบ Open Source และ Self-host ได้',['Open Source','HTML5','Self-host'],'ฟรี','ง่าย','Speed Test','ใช้ทดสอบ speed หรือเอา source ไป host เองได้'),
+    t('SpeedOf.Me','https://speedof.me','HTML5 Speed Test พร้อม Graph Real-time',['HTML5','CDN','Mobile'],'ฟรี','ง่าย','Speed Test','ใช้ดูกราฟ speed แบบ real-time เหมาะกับ browser/mobile')
   ]},
   {id:'multiping',label:'Multi-location Ping',icon:'map',color:'c-green',sub:'Ping และ Traceroute จากหลายประเทศทั่วโลก',tools:[
-    {name:'Uptrends Ping',url:'https://www.uptrends.com/tools/ping-test',color:'c-green',desc:'Ping จาก 220+ Location ทั่วโลก',tags:['Ping','Global','Latency'],pricing:'ฟรี',difficulty:'ง่าย',type:'Multi Ping'},
-    {name:'Site24x7 Ping',url:'https://www.site24x7.com/tools/online-ping.html',color:'c-green',desc:'Ping และ Traceroute จากหลายประเทศ',tags:['Ping','Traceroute','Global'],pricing:'ฟรี',difficulty:'ง่าย',type:'Global Ping'},
-    {name:'Dotcom-Tools',url:'https://www.dotcom-tools.com/ping-test',color:'c-green',desc:'ทดสอบ Ping, Traceroute และ Web Performance จากหลายจุด',tags:['Ping','Performance','Global'],pricing:'ฟรีจำกัด',difficulty:'ง่าย',type:'Multi Ping'},
-    {name:'Ping.pe',url:'https://ping.pe',color:'c-green',desc:'Ping, MTR และ TCP Ping จากหลายประเทศ',tags:['Ping','MTR','TCP'],pricing:'ฟรี',difficulty:'ปานกลาง',type:'Multi Ping'},
-    {name:'KeyCDN Ping',url:'https://tools.keycdn.com/ping',color:'c-green',desc:'Ping จาก KeyCDN PoP ทั่วโลก',tags:['CDN','Ping','Performance'],pricing:'ฟรี',difficulty:'ง่าย',type:'CDN Test'},
-    {name:'Globalping',url:'https://www.jsdelivr.com/globalping',color:'c-green',desc:'Ping และ Traceroute จาก Community Probes ทั่วโลก',tags:['Ping','Traceroute','API'],pricing:'ฟรี',difficulty:'ปานกลาง',type:'Network Probe'},
-    {name:'CA App Synthetic',url:'https://asm.ca.com/en/ping.php',color:'c-green',desc:'Ping และ Monitor Response Time จากหลาย Location',tags:['Ping','Monitor','Global'],pricing:'ฟรี',difficulty:'ง่าย',type:'Monitor Ping'},
-    {name:'Ping.Canopy',url:'https://ping.canopy.tools',color:'c-green',desc:'แสดง Latency Map แบบ Visual',tags:['Ping','Latency','Map'],pricing:'ฟรี',difficulty:'ง่าย',type:'Latency Map'}
+    t('Uptrends Ping','https://www.uptrends.com/tools/ping-test','Ping จาก 220+ Location ทั่วโลก',['Ping','Global','Latency'],'ฟรี','ง่าย','Multi Ping','ใช้เช็ก latency/packet loss จากหลายเมืองทั่วโลก'),
+    t('Site24x7 Ping','https://www.site24x7.com/tools/online-ping.html','Ping และ Traceroute จากหลายประเทศ',['Ping','Traceroute','Global'],'ฟรี','ง่าย','Global Ping','ใช้ดู response time จากหลายประเทศและตรวจ route เบื้องต้น'),
+    t('Dotcom-Tools','https://www.dotcom-tools.com/ping-test','ทดสอบ Ping, Traceroute และ Web Performance จากหลายจุด',['Ping','Performance','Global'],'ฟรีจำกัด','ง่าย','Multi Ping','ใช้ตรวจ uptime/performance จาก checkpoint หลายประเทศ'),
+    t('Ping.pe','https://ping.pe','Ping, MTR และ TCP Ping จากหลายประเทศ',['Ping','MTR','TCP'],'ฟรี','ปานกลาง','Multi Ping','ใช้ตรวจปัญหา route/packet loss ด้วย ping และ mtr'),
+    t('KeyCDN Ping','https://tools.keycdn.com/ping','Ping จาก KeyCDN PoP ทั่วโลก',['CDN','Ping','Performance'],'ฟรี','ง่าย','CDN Test','ใช้ดู latency จาก node CDN หลาย region'),
+    t('Globalping','https://www.jsdelivr.com/globalping','Ping และ Traceroute จาก Community Probes ทั่วโลก',['Ping','Traceroute','API'],'ฟรี','ปานกลาง','Network Probe','ใช้ทดสอบ network จาก probe หลายแห่งและต่อยอด API ได้'),
+    t('CA App Synthetic','https://asm.ca.com/en/ping.php','Ping และ Monitor Response Time จากหลาย Location',['Ping','Monitor','Global'],'ฟรี','ง่าย','Monitor Ping','ใช้เช็ก response time จากจุด monitor ต่างประเทศ'),
+    t('Ping.Canopy','https://ping.canopy.tools','แสดง Latency Map แบบ Visual',['Ping','Latency','Map'],'ฟรี','ง่าย','Latency Map','ใช้ดู latency ในรูปแบบแผนที่เข้าใจง่าย')
   ]},
   {id:'ssl',label:'Nmap / SSL / Zone',icon:'cert',color:'c-pink',sub:'SSL Check, Zone Transfer, Online Nmap, Certificate',tools:[
-    {name:'SSL Labs',url:'https://www.ssllabs.com/ssltest/',color:'c-pink',desc:'วิเคราะห์ SSL/TLS Configuration แบบละเอียดและให้ Grade',tags:['SSL','TLS','Security'],pricing:'ฟรี',difficulty:'ปานกลาง',type:'SSL Analyzer'},
-    {name:'SSL Shopper',url:'https://www.sslshopper.com/ssl-checker.html',color:'c-pink',desc:'ตรวจ SSL Certificate, Chain และวันหมดอายุ',tags:['SSL','Certificate','Chain'],pricing:'ฟรี',difficulty:'ง่าย',type:'SSL Checker'},
-    {name:'DigiCert Tools',url:'https://www.digicert.com/help/',color:'c-pink',desc:'SSL Checker, CSR Decoder และ Certificate Tools',tags:['SSL','DigiCert','CSR'],pricing:'ฟรี',difficulty:'ง่าย',type:'SSL Tools'},
-    {name:'CRT.sh',url:'https://crt.sh',color:'c-pink',desc:'ค้น Certificate Transparency Logs ของโดเมน',tags:['CT Log','Certificate','SSL'],pricing:'ฟรี',difficulty:'ปานกลาง',type:'CT Log Search'},
-    {name:'HackerTarget SSL',url:'https://hackertarget.com/ssl-check/',color:'c-pink',desc:'ตรวจ SSL Certificate และข้อมูลเบื้องต้น',tags:['SSL','Certificate'],pricing:'ฟรี',difficulty:'ง่าย',type:'SSL Checker'},
-    {name:'HackerTarget Zone',url:'https://hackertarget.com/zone-transfer/',color:'c-pink',desc:'ทดสอบ DNS Zone Transfer สำหรับโดเมนที่มีสิทธิ์ตรวจสอบ',tags:['DNS','AXFR','Zone Transfer'],pricing:'ฟรี',difficulty:'ปานกลาง',type:'Security Test'},
-    {name:'TestSSL.sh Online',url:'https://dev.ssllabs.com/ssltest/',color:'c-pink',desc:'SSL Labs Dev Instance สำหรับทดสอบ TLS/SSL',tags:['SSL','TLS','Dev'],pricing:'ฟรี',difficulty:'ปานกลาง',type:'SSL Test'},
-    {name:'SSL2Buy Checker',url:'https://www.ssl2buy.com/ssl-checker',color:'c-pink',desc:'ตรวจ SSL Certificate หลายโดเมนและวันหมดอายุ',tags:['SSL','Multi-domain','Expiry'],pricing:'ฟรี',difficulty:'ง่าย',type:'SSL Checker'}
+    t('SSL Labs','https://www.ssllabs.com/ssltest/','วิเคราะห์ SSL/TLS Configuration แบบละเอียดและให้ Grade',['SSL','TLS','Security'],'ฟรี','ปานกลาง','SSL Analyzer','ใช้ตรวจความแข็งแรงของ SSL/TLS, cipher, protocol และ certificate chain'),
+    t('SSL Shopper','https://www.sslshopper.com/ssl-checker.html','ตรวจ SSL Certificate, Chain และวันหมดอายุ',['SSL','Certificate','Chain'],'ฟรี','ง่าย','SSL Checker','ใช้ตรวจ certificate ว่าติดตั้งถูกไหม chain ครบไหม และหมดอายุเมื่อไร'),
+    t('DigiCert Tools','https://www.digicert.com/help/','SSL Checker, CSR Decoder และ Certificate Tools',['SSL','DigiCert','CSR'],'ฟรี','ง่าย','SSL Tools','ใช้ตรวจ SSL และถอด CSR/certificate สำหรับงาน certificate'),
+    t('CRT.sh','https://crt.sh','ค้น Certificate Transparency Logs ของโดเมน',['CT Log','Certificate','SSL'],'ฟรี','ปานกลาง','CT Log Search','ใช้ค้นหา subdomain/certificate ที่เคยออกให้โดเมน'),
+    t('HackerTarget SSL','https://hackertarget.com/ssl-check/','ตรวจ SSL Certificate และข้อมูลเบื้องต้น',['SSL','Certificate'],'ฟรี','ง่าย','SSL Checker','ใช้ดู SSL certificate แบบเร็วจากภายนอก'),
+    t('HackerTarget Zone','https://hackertarget.com/zone-transfer/','ทดสอบ DNS Zone Transfer สำหรับโดเมนที่มีสิทธิ์ตรวจสอบ',['DNS','AXFR','Zone Transfer'],'ฟรี','ปานกลาง','Security Test','ใช้ตรวจว่า DNS server เปิด AXFR เสี่ยงรั่วข้อมูลหรือไม่'),
+    t('TestSSL.sh Online','https://dev.ssllabs.com/ssltest/','SSL Labs Dev Instance สำหรับทดสอบ TLS/SSL',['SSL','TLS','Dev'],'ฟรี','ปานกลาง','SSL Test','ใช้ทดสอบ SSL/TLS คล้าย SSL Labs ใน instance dev'),
+    t('SSL2Buy Checker','https://www.ssl2buy.com/ssl-checker','ตรวจ SSL Certificate หลายโดเมนและวันหมดอายุ',['SSL','Multi-domain','Expiry'],'ฟรี','ง่าย','SSL Checker','ใช้ตรวจวันหมดอายุและรายละเอียด certificate หลายโดเมน')
   ]}
 ];
 
-const FUNCTION_DOCS=[
-  {name:'buildNav()',purpose:'สร้างเมนูด้านซ้ายจากข้อมูล PAGES และเพิ่มแท็บ “ฟังก์ชันระบบ” ต่อท้าย',steps:['วนหมวดหมู่ทั้งหมด','สร้าง .nav-item ของแต่ละหมวด','เพิ่มเมนูฟังก์ชันระบบพร้อม badge จำนวนฟังก์ชัน']},
-  {name:'selectPage(index)',purpose:'เลือกหมวดหมู่ Network Tools จากเมนูด้านซ้าย',steps:['ตั้ง currentView เป็น tools','อัปเดต currentPageIndex','เปลี่ยน title/subtitle','เรียก renderGrid()']},
-  {name:'selectFunctionPage()',purpose:'เปิดแท็บ “ฟังก์ชันระบบ” จากเมนูด้านซ้าย',steps:['ตั้ง currentView เป็น functions','เปลี่ยนหัวข้อหน้า','แสดงการ์ดคำอธิบายฟังก์ชันทั้งหมด']},
-  {name:'renderGrid()',purpose:'แสดงการ์ดเครื่องมือในหมวดที่เลือก',steps:['อ่าน tools จากหมวดปัจจุบัน','สร้าง tool-card','ผูก onclick ไปที่ openDetail()']},
-  {name:'renderFunctionPage()',purpose:'แสดงหน้าอธิบายฟังก์ชันทั้งหมดในพื้นที่ Grid หลัก',steps:['เปลี่ยน layout เป็น function-grid','วน FUNCTION_DOCS','สร้างการ์ดชื่อฟังก์ชัน จุดประสงค์ และขั้นตอน']},
-  {name:'openDetail(toolIndex)',purpose:'เปิดหน้า Detail ของเครื่องมือที่เลือก',steps:['บันทึก currentToolIndex','ซ่อน Grid','แสดง Detail Panel','เรียก renderInfo() และ renderFunctionDocs()']},
-  {name:'renderInfo()',purpose:'สร้างแท็บรายละเอียดของเครื่องมือ',steps:['แสดงชื่อเว็บ URL คำอธิบาย tags','แสดงราคา ประเภท และความยาก','สร้างปุ่มเปิดเว็บจริง']},
-  {name:'switchTab(tab)',purpose:'เปลี่ยนแท็บ รายละเอียด / ฟังก์ชัน / เปิดเว็บ ภายในหน้า Detail',steps:['ลบ active ทุกแท็บ','เพิ่ม active ให้แท็บที่เลือก','ถ้าเป็น iframe จะโหลด URL ด้วย loadIframe()']},
-  {name:'renderFunctionDocs()',purpose:'สร้างแท็บคำอธิบายฟังก์ชันในหน้า Detail',steps:['อ่าน FUNCTION_DOCS','สร้างการ์ดคำอธิบาย','ใส่ลงใน #function-docs']},
-  {name:'loadIframe(url)',purpose:'โหลดเว็บเครื่องมือใน iframe',steps:['ตั้ง currentUrl','แสดง loading','กำหนด iframe.src','ถ้าเกิน 8 วินาทีจะแสดงข้อความอาจถูกบล็อก']},
-  {name:'iframeLoaded()',purpose:'ทำงานหลัง iframe โหลดเสร็จ',steps:['หยุด timer','ซ่อน loading','แสดง iframe']},
-  {name:'openCurrentTool()',purpose:'เปิดเว็บของเครื่องมือปัจจุบัน',steps:['ถ้าอยู่หน้า functions จะไม่เปิดเว็บ','ถ้าเลือก tool แล้วเปิด currentUrl','ถ้ายังไม่เลือก เปิด tool แรกของหมวด']},
-  {name:'openInNewTab()',purpose:'เปิด URL ปัจจุบันในแท็บใหม่',steps:['ใช้ window.open(currentUrl, _blank, noopener)']},
-  {name:'reloadIframe()',purpose:'โหลด iframe ซ้ำ',steps:['เรียก loadIframe(currentUrl) ใหม่']},
-  {name:'backToGrid()',purpose:'กลับจาก Detail ไปหน้า Grid',steps:['reset currentToolIndex','เรียก showGridView()','คืน title เป็นชื่อหมวด']},
-  {name:'showGridView()',purpose:'ตัวช่วยแสดงหน้า Grid',steps:['แสดง grid-wrap','ซ่อน detail-panel','ซ่อนปุ่มกลับ']}
-];
+function t(name,url,desc,tags,pricing,difficulty,type,help){return{name,url,desc,tags,pricing,difficulty,type,help,color:''};}
 
 let currentPageIndex=0;
 let currentToolIndex=null;
 let currentUrl='';
 let currentView='tools';
 const $=(id)=>document.getElementById(id);
+
+function applyColors(){PAGES.forEach(p=>p.tools.forEach(tool=>tool.color=p.color));}
+function totalTools(){return PAGES.reduce((sum,p)=>sum+p.tools.length,0);}
+function getUseCase(tool){return tool.help||tool.desc;}
+function getTabDoc(tool){return[
+  `รายละเอียด: แสดงชื่อเว็บ URL คำอธิบาย แท็ก ประเภท ราคา ความยาก และหมวดของ ${tool.name}`,
+  `ฟังก์ชัน: อธิบายว่า ${tool.name} ช่วยอะไร เหมาะใช้ตอนไหน และข้อมูลแต่ละช่องหมายถึงอะไร`,
+  `เปิดเว็บ: ทดลองเปิด ${tool.name} ใน iframe ถ้าเว็บบล็อกให้กด Tab ใหม่`
+];}
 
 function buildNav(){
   const nav=$('nav-list');
@@ -116,13 +108,13 @@ function buildNav(){
       <span class="nav-label">${page.label}</span>
       <span class="nav-badge">${page.tools.length}</span>
     </div>`).join('');
-  const functionItem=`
+  const docsItem=`
     <div class="nav-item ${currentView==='functions'?'active':''}" onclick="selectFunctionPage()">
       <span class="nav-icon">${ICONS.function}</span>
-      <span class="nav-label">ฟังก์ชันระบบ</span>
-      <span class="nav-badge">${FUNCTION_DOCS.length}</span>
+      <span class="nav-label">ฟังก์ชัน Tools</span>
+      <span class="nav-badge">${totalTools()}</span>
     </div>`;
-  nav.innerHTML=toolItems+functionItem;
+  nav.innerHTML=toolItems+docsItem;
 }
 
 function selectPage(index){
@@ -142,9 +134,9 @@ function selectFunctionPage(){
   currentView='functions';
   currentToolIndex=null;
   currentUrl='';
-  $('page-title').textContent='ฟังก์ชันระบบ';
-  $('page-sub').textContent='คำอธิบายฟังก์ชัน JavaScript ทั้งหมดของ Dashboard นี้';
-  $('grid-category-label').textContent=`ฟังก์ชันระบบ (${FUNCTION_DOCS.length} functions)`;
+  $('page-title').textContent='ฟังก์ชัน Tools';
+  $('page-sub').textContent='คู่มืออธิบายแต่ละเมนู แต่ละเว็บไซต์ และข้อมูลในแท็บว่าช่วยอะไร';
+  $('grid-category-label').textContent=`คู่มือ Tools ทั้งหมด (${totalTools()} websites)`;
   buildNav();
   showGridView();
   renderFunctionPage();
@@ -167,12 +159,44 @@ function renderGrid(){
 
 function renderFunctionPage(){
   $('tools-grid').className='function-grid';
-  $('tools-grid').innerHTML=FUNCTION_DOCS.map(fn=>`
+  const intro=`
     <article class="function-card">
-      <code>${fn.name}</code>
-      <p>${fn.purpose}</p>
-      <ul>${fn.steps.map(step=>`<li>${step}</li>`).join('')}</ul>
+      <code>ภาพรวมหน้าเว็บ</code>
+      <p>หน้านี้คือคู่มืออธิบายว่าเมนูด้านซ้ายแต่ละหมวดคืออะไร เว็บไซต์แต่ละตัวช่วยอะไร และข้อมูลในแท็บใช้ทำอะไร</p>
+      <ul>
+        <li>เมนูด้านซ้าย = หมวดเครื่องมือ Network</li>
+        <li>การ์ด = เว็บไซต์เครื่องมือที่ใช้ตรวจสอบจริง</li>
+        <li>badge ตัวเลข = จำนวนเว็บไซต์ในหมวดนั้น</li>
+      </ul>
+    </article>`;
+  const categoryCards=PAGES.map(page=>`
+    <article class="function-card">
+      <code>${ICONS[page.icon]||'•'} ${page.label}</code>
+      <p>${page.sub}</p>
+      <ul>
+        <li>มี ${page.tools.length} เว็บไซต์ในหมวดนี้</li>
+        <li>เหมาะสำหรับ: ${describeCategory(page.id)}</li>
+        <li>คลิกเมนูนี้เพื่อดูการ์ดเว็บไซต์ทั้งหมดในหมวด</li>
+      </ul>
     </article>`).join('');
+  const toolCards=PAGES.flatMap(page=>page.tools.map(tool=>`
+    <article class="function-card">
+      <code>${tool.name}</code>
+      <p><b>ช่วยอะไร:</b> ${getUseCase(tool)}</p>
+      <ul>
+        <li><b>อยู่ในเมนู:</b> ${page.label}</li>
+        <li><b>ประเภท:</b> ${tool.type}</li>
+        <li><b>ราคา:</b> ${tool.pricing}</li>
+        <li><b>ความยาก:</b> ${tool.difficulty}</li>
+        <li><b>ข้อมูลในแท็บ:</b> รายละเอียด / ฟังก์ชัน / เปิดเว็บ</li>
+      </ul>
+    </article>`)).join('');
+  $('tools-grid').innerHTML=intro+categoryCards+toolCards;
+}
+
+function describeCategory(id){
+  const map={dns:'ตรวจ DNS และระบบ Email',portscan:'ตรวจ WHOIS, Port, Nmap และเส้นทาง Network',asn:'วิเคราะห์ ASN, BGP, Prefix และ Internet Exchange',ipleak:'ตรวจ IP Leak, DNS Leak, WebRTC และ Privacy',dnsprop:'ตรวจ DNS Propagation จากหลายประเทศ',speed:'วัด Speed, Latency, Jitter และ Packet Loss',multiping:'Ping/Traceroute จากหลาย location ทั่วโลก',ssl:'ตรวจ SSL/TLS, Certificate และ Zone Transfer'};
+  return map[id]||'Network Tools';
 }
 
 function openDetail(toolIndex){
@@ -202,17 +226,21 @@ function renderInfo(){
       </div>
     </div>
     <div class="info-section"><h3>คำอธิบาย</h3><p>${tool.desc}</p></div>
+    <div class="info-section"><h3>ช่วยอะไร</h3><p>${getUseCase(tool)}</p></div>
     <div class="meta-grid">
       <div class="meta"><span>ประเภท</span><b>${tool.type}</b></div>
       <div class="meta"><span>ราคา</span><b>${tool.pricing}</b></div>
       <div class="meta"><span>ความยาก</span><b>${tool.difficulty}</b></div>
       <div class="meta"><span>หมวด</span><b>${page.label}</b></div>
     </div>
-    <div class="info-section" style="margin-top:18px"><h3>แนวทางใช้งาน</h3>
+    <div class="info-section" style="margin-top:18px"><h3>ข้อมูลในหน้านี้หมายถึงอะไร</h3>
       <ul>
-        <li>กดแท็บ “เปิดเว็บ” เพื่อทดลองเปิดผ่าน iframe ใน Dashboard</li>
-        <li>ถ้าเว็บไม่แสดง ให้กด “Tab ใหม่” เพราะบางเว็บบล็อก iframe</li>
-        <li>ใช้กับ Domain/IP/ระบบที่คุณมีสิทธิ์ตรวจสอบเท่านั้น</li>
+        <li><b>ชื่อเว็บ:</b> เครื่องมือภายนอกที่ใช้ตรวจสอบ Network</li>
+        <li><b>URL:</b> ลิงก์ปลายทางของเว็บไซต์จริง</li>
+        <li><b>Tags:</b> คีย์เวิร์ดบอกว่าเว็บนี้เด่นเรื่องอะไร</li>
+        <li><b>ประเภท:</b> กลุ่มการใช้งาน เช่น WHOIS, DNS Lookup, Speed Test</li>
+        <li><b>ราคา:</b> ใช้ฟรีหรือมีข้อจำกัด/แผน Pro</li>
+        <li><b>ความยาก:</b> ระดับความเข้าใจที่ต้องใช้ก่อนอ่านผล</li>
       </ul>
     </div>
     <button class="btn primary" onclick="openInNewTab()">เปิดเว็บจริง ↗</button>`;
@@ -227,12 +255,41 @@ function switchTab(tab){
 }
 
 function renderFunctionDocs(){
-  $('function-docs').innerHTML=FUNCTION_DOCS.map(fn=>`
+  const page=PAGES[currentPageIndex];
+  const tool=page.tools[currentToolIndex];
+  $('function-docs').innerHTML=`
     <div class="function-card">
-      <code>${fn.name}</code>
-      <p>${fn.purpose}</p>
-      <ul>${fn.steps.map(step=>`<li>${step}</li>`).join('')}</ul>
-    </div>`).join('');
+      <code>${page.label}</code>
+      <p><b>เมนูนี้ช่วยอะไร:</b> ${describeCategory(page.id)}</p>
+      <ul>
+        <li>เป็นหมวดเครื่องมือด้านซ้าย</li>
+        <li>มี ${page.tools.length} เว็บในหมวดนี้</li>
+        <li>ใช้แยกประเภทงาน Network ให้หาเว็บง่ายขึ้น</li>
+      </ul>
+    </div>
+    <div class="function-card">
+      <code>${tool.name}</code>
+      <p><b>เว็บไซต์นี้ช่วยอะไร:</b> ${getUseCase(tool)}</p>
+      <ul>
+        <li><b>URL:</b> ${tool.url}</li>
+        <li><b>ประเภท:</b> ${tool.type}</li>
+        <li><b>Tags:</b> ${tool.tags.join(', ')}</li>
+      </ul>
+    </div>
+    <div class="function-card">
+      <code>แท็บในหน้านี้</code>
+      <p>อธิบายว่าแต่ละแท็บใช้ทำอะไรเมื่อกดเข้ามาที่ ${tool.name}</p>
+      <ul>${getTabDoc(tool).map(item=>`<li>${item}</li>`).join('')}</ul>
+    </div>
+    <div class="function-card">
+      <code>ข้อควรรู้เรื่อง iframe</code>
+      <p>บางเว็บอาจไม่ยอมแสดงในกรอบ iframe เพราะตั้งค่าความปลอดภัยไว้</p>
+      <ul>
+        <li>ถ้า iframe โหลดไม่ขึ้น ให้กด Tab ใหม่</li>
+        <li>การเปิดใน Tab ใหม่คือการไปยังเว็บจริงโดยตรง</li>
+        <li>ควรใช้เครื่องมือกับระบบหรือโดเมนที่มีสิทธิ์ตรวจสอบเท่านั้น</li>
+      </ul>
+    </div>`;
 }
 
 function loadIframe(url){
@@ -268,27 +325,11 @@ function openCurrentTool(){
   openInNewTab();
 }
 
-function openInNewTab(){
-  if(currentUrl)window.open(currentUrl,'_blank','noopener');
-}
+function openInNewTab(){if(currentUrl)window.open(currentUrl,'_blank','noopener');}
+function reloadIframe(){if(currentUrl)loadIframe(currentUrl);}
+function backToGrid(){currentToolIndex=null;showGridView();if(currentView==='functions'){selectFunctionPage();return;}const page=PAGES[currentPageIndex];$('page-title').textContent=page.label;$('page-sub').textContent=page.sub;}
+function showGridView(){$('grid-wrap').hidden=false;$('detail-panel').hidden=true;$('btn-back').hidden=true;}
 
-function reloadIframe(){
-  if(currentUrl)loadIframe(currentUrl);
-}
-
-function backToGrid(){
-  currentToolIndex=null;
-  showGridView();
-  const page=PAGES[currentPageIndex];
-  $('page-title').textContent=page.label;
-  $('page-sub').textContent=page.sub;
-}
-
-function showGridView(){
-  $('grid-wrap').hidden=false;
-  $('detail-panel').hidden=true;
-  $('btn-back').hidden=true;
-}
-
+applyColors();
 buildNav();
 selectPage(0);

@@ -1,4 +1,4 @@
-const ICONS={mail:'✉',scan:'▣',topology:'⌬',shield:'◈',world:'◎',bolt:'ϟ',map:'⌖',cert:'▤'};
+const ICONS={mail:'✉',scan:'▣',topology:'⌬',shield:'◈',world:'◎',bolt:'ϟ',map:'⌖',cert:'▤',function:'ƒ'};
 
 const PAGES=[
   {id:'dns',label:'DNS & Email',icon:'mail',color:'c-blue',sub:'DNS, Blacklist, SMTP, SPF, DKIM, DMARC',tools:[
@@ -84,16 +84,18 @@ const PAGES=[
 ];
 
 const FUNCTION_DOCS=[
-  {name:'buildNav()',purpose:'สร้างเมนูด้านซ้ายจากข้อมูล PAGES',steps:['วนหมวดหมู่ทั้งหมด','สร้าง .nav-item','ผูก onclick ไปที่ selectPage()']},
-  {name:'selectPage(index)',purpose:'เลือกหมวดหมู่และเปลี่ยนข้อมูลหน้า Grid',steps:['อัปเดต currentPageIndex','อัปเดต active menu','เปลี่ยน title/subtitle','เรียก renderGrid()']},
+  {name:'buildNav()',purpose:'สร้างเมนูด้านซ้ายจากข้อมูล PAGES และเพิ่มแท็บ “ฟังก์ชันระบบ” ต่อท้าย',steps:['วนหมวดหมู่ทั้งหมด','สร้าง .nav-item ของแต่ละหมวด','เพิ่มเมนูฟังก์ชันระบบพร้อม badge จำนวนฟังก์ชัน']},
+  {name:'selectPage(index)',purpose:'เลือกหมวดหมู่ Network Tools จากเมนูด้านซ้าย',steps:['ตั้ง currentView เป็น tools','อัปเดต currentPageIndex','เปลี่ยน title/subtitle','เรียก renderGrid()']},
+  {name:'selectFunctionPage()',purpose:'เปิดแท็บ “ฟังก์ชันระบบ” จากเมนูด้านซ้าย',steps:['ตั้ง currentView เป็น functions','เปลี่ยนหัวข้อหน้า','แสดงการ์ดคำอธิบายฟังก์ชันทั้งหมด']},
   {name:'renderGrid()',purpose:'แสดงการ์ดเครื่องมือในหมวดที่เลือก',steps:['อ่าน tools จากหมวดปัจจุบัน','สร้าง tool-card','ผูก onclick ไปที่ openDetail()']},
+  {name:'renderFunctionPage()',purpose:'แสดงหน้าอธิบายฟังก์ชันทั้งหมดในพื้นที่ Grid หลัก',steps:['เปลี่ยน layout เป็น function-grid','วน FUNCTION_DOCS','สร้างการ์ดชื่อฟังก์ชัน จุดประสงค์ และขั้นตอน']},
   {name:'openDetail(toolIndex)',purpose:'เปิดหน้า Detail ของเครื่องมือที่เลือก',steps:['บันทึก currentToolIndex','ซ่อน Grid','แสดง Detail Panel','เรียก renderInfo() และ renderFunctionDocs()']},
   {name:'renderInfo()',purpose:'สร้างแท็บรายละเอียดของเครื่องมือ',steps:['แสดงชื่อเว็บ URL คำอธิบาย tags','แสดงราคา ประเภท และความยาก','สร้างปุ่มเปิดเว็บจริง']},
-  {name:'switchTab(tab)',purpose:'เปลี่ยนแท็บ รายละเอียด / ฟังก์ชัน / เปิดเว็บ',steps:['ลบ active ทุกแท็บ','เพิ่ม active ให้แท็บที่เลือก','ถ้าเป็น iframe จะโหลด URL ด้วย loadIframe()']},
-  {name:'renderFunctionDocs()',purpose:'สร้างแท็บคำอธิบายฟังก์ชันทั้งหมด',steps:['อ่าน FUNCTION_DOCS','สร้างการ์ดคำอธิบาย','ใส่ลงใน #function-docs']},
+  {name:'switchTab(tab)',purpose:'เปลี่ยนแท็บ รายละเอียด / ฟังก์ชัน / เปิดเว็บ ภายในหน้า Detail',steps:['ลบ active ทุกแท็บ','เพิ่ม active ให้แท็บที่เลือก','ถ้าเป็น iframe จะโหลด URL ด้วย loadIframe()']},
+  {name:'renderFunctionDocs()',purpose:'สร้างแท็บคำอธิบายฟังก์ชันในหน้า Detail',steps:['อ่าน FUNCTION_DOCS','สร้างการ์ดคำอธิบาย','ใส่ลงใน #function-docs']},
   {name:'loadIframe(url)',purpose:'โหลดเว็บเครื่องมือใน iframe',steps:['ตั้ง currentUrl','แสดง loading','กำหนด iframe.src','ถ้าเกิน 8 วินาทีจะแสดงข้อความอาจถูกบล็อก']},
   {name:'iframeLoaded()',purpose:'ทำงานหลัง iframe โหลดเสร็จ',steps:['หยุด timer','ซ่อน loading','แสดง iframe']},
-  {name:'openCurrentTool()',purpose:'เปิดเว็บของเครื่องมือปัจจุบัน',steps:['ถ้าเลือก tool แล้วเปิด currentUrl','ถ้ายังไม่เลือก เปิด tool แรกของหมวด']},
+  {name:'openCurrentTool()',purpose:'เปิดเว็บของเครื่องมือปัจจุบัน',steps:['ถ้าอยู่หน้า functions จะไม่เปิดเว็บ','ถ้าเลือก tool แล้วเปิด currentUrl','ถ้ายังไม่เลือก เปิด tool แรกของหมวด']},
   {name:'openInNewTab()',purpose:'เปิด URL ปัจจุบันในแท็บใหม่',steps:['ใช้ window.open(currentUrl, _blank, noopener)']},
   {name:'reloadIframe()',purpose:'โหลด iframe ซ้ำ',steps:['เรียก loadIframe(currentUrl) ใหม่']},
   {name:'backToGrid()',purpose:'กลับจาก Detail ไปหน้า Grid',steps:['reset currentToolIndex','เรียก showGridView()','คืน title เป็นชื่อหมวด']},
@@ -103,19 +105,28 @@ const FUNCTION_DOCS=[
 let currentPageIndex=0;
 let currentToolIndex=null;
 let currentUrl='';
+let currentView='tools';
 const $=(id)=>document.getElementById(id);
 
 function buildNav(){
   const nav=$('nav-list');
-  nav.innerHTML=PAGES.map((page,index)=>`
-    <div class="nav-item ${index===currentPageIndex?'active':''}" onclick="selectPage(${index})">
+  const toolItems=PAGES.map((page,index)=>`
+    <div class="nav-item ${currentView==='tools'&&index===currentPageIndex?'active':''}" onclick="selectPage(${index})">
       <span class="nav-icon">${ICONS[page.icon]||'•'}</span>
       <span class="nav-label">${page.label}</span>
       <span class="nav-badge">${page.tools.length}</span>
     </div>`).join('');
+  const functionItem=`
+    <div class="nav-item ${currentView==='functions'?'active':''}" onclick="selectFunctionPage()">
+      <span class="nav-icon">${ICONS.function}</span>
+      <span class="nav-label">ฟังก์ชันระบบ</span>
+      <span class="nav-badge">${FUNCTION_DOCS.length}</span>
+    </div>`;
+  nav.innerHTML=toolItems+functionItem;
 }
 
 function selectPage(index){
+  currentView='tools';
   currentPageIndex=index;
   currentToolIndex=null;
   const page=PAGES[index];
@@ -127,8 +138,21 @@ function selectPage(index){
   renderGrid();
 }
 
+function selectFunctionPage(){
+  currentView='functions';
+  currentToolIndex=null;
+  currentUrl='';
+  $('page-title').textContent='ฟังก์ชันระบบ';
+  $('page-sub').textContent='คำอธิบายฟังก์ชัน JavaScript ทั้งหมดของ Dashboard นี้';
+  $('grid-category-label').textContent=`ฟังก์ชันระบบ (${FUNCTION_DOCS.length} functions)`;
+  buildNav();
+  showGridView();
+  renderFunctionPage();
+}
+
 function renderGrid(){
   const page=PAGES[currentPageIndex];
+  $('tools-grid').className='grid';
   $('tools-grid').innerHTML=page.tools.map((tool,index)=>`
     <article class="tool-card" onclick="openDetail(${index})">
       <div class="tool-top">
@@ -138,6 +162,16 @@ function renderGrid(){
       <div class="tool-name">${tool.name}</div>
       <div class="tool-desc">${tool.desc}</div>
       <div class="tool-url">${tool.url.replace(/^https?:\/\//,'')}</div>
+    </article>`).join('');
+}
+
+function renderFunctionPage(){
+  $('tools-grid').className='function-grid';
+  $('tools-grid').innerHTML=FUNCTION_DOCS.map(fn=>`
+    <article class="function-card">
+      <code>${fn.name}</code>
+      <p>${fn.purpose}</p>
+      <ul>${fn.steps.map(step=>`<li>${step}</li>`).join('')}</ul>
     </article>`).join('');
 }
 
@@ -225,6 +259,7 @@ function iframeLoaded(){
 }
 
 function openCurrentTool(){
+  if(currentView==='functions')return;
   if(currentToolIndex===null){
     const first=PAGES[currentPageIndex].tools[0];
     window.open(first.url,'_blank','noopener');

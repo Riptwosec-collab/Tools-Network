@@ -1,0 +1,16 @@
+{
+  "name": "NetTools Pro",
+  "short_name": "NetTools",
+  "description": "รวมเครื่องมือ Network สำหรับ DNS, WHOIS, BGP, IP Leak, Speed Test และ Network Diagnostics",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0e1117",
+  "theme_color": "#10b981",
+  "orientation": "any",
+  "icons": [
+    { "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%2310b981'/><text x='96' y='140' text-anchor='middle' font-size='120' font-family='monospace' fill='white'>⌘</text></svg>", "sizes": "192x192", "type": "image/svg+xml" },
+    { "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%2310b981'/><text x='256' y='370' text-anchor='middle' font-size='320' font-family='monospace' fill='white'>⌘</text></svg>", "sizes": "512x512", "type": "image/svg+xml" }
+  ],
+  "categories": ["utilities", "productivity"],
+  "lang": "th"
+}

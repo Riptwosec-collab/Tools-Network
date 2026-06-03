@@ -1,335 +1,526 @@
-const ICONS={mail:'✉',scan:'▣',topology:'⌬',shield:'◈',world:'◎',bolt:'ϟ',map:'⌖',cert:'▤',function:'☰'};
-
-const PAGES=[
-  {id:'dns',label:'DNS & Email',icon:'mail',color:'c-blue',sub:'DNS, Blacklist, SMTP, SPF, DKIM, DMARC',tools:[
-    t('MXToolbox','https://mxtoolbox.com','DNS Lookup, Blacklist, SMTP Test ครบวงจร',['DNS','Blacklist','SMTP','Email'],'ฟรี / มี Pro','ง่าย','Web Tool','ใช้ตรวจสุขภาพ DNS และระบบอีเมล เช่น MX, SPF, DKIM, DMARC, SMTP และ Blacklist'),
-    t('DNSChecker','https://dnschecker.org','ตรวจสอบ DNS Propagation จากหลายประเทศทั่วโลก',['DNS','Propagation','Global'],'ฟรี','ง่าย','DNS Tool','ใช้ดูว่า DNS ที่แก้ไข เช่น A, MX, CNAME, TXT กระจายไปทั่วโลกแล้วหรือยัง'),
-    t('Mail Tester','https://www.mail-tester.com','ทดสอบคะแนนความน่าเชื่อถือของ Email และ Spam Score',['Email','SPF','DKIM','DMARC'],'ฟรีจำกัดครั้ง','ง่าย','Email Tester','ใช้ส่งอีเมลทดสอบแล้วดูคะแนนว่าอีเมลมีโอกาสเข้า Inbox หรือ Spam'),
-    t('DMARC Inspector','https://dmarcian.com/dmarc-inspector/','วิเคราะห์ DMARC Record และอธิบาย Policy แบบอ่านง่าย',['DMARC','Email Security','DNS'],'ฟรี','ปานกลาง','DNS Analyzer','ใช้ตรวจ DMARC policy เช่น p=none/quarantine/reject และที่อยู่อีเมลรับ report'),
-    t('SPF Validator','https://www.kitterman.com/spf/validate.html','ตรวจสอบ Syntax และ Lookup Count ของ SPF Record',['SPF','Email','DNS'],'ฟรี','ปานกลาง','DNS Validator','ใช้ดูว่า SPF เขียนถูกไหม และ lookup เกิน limit 10 ครั้งหรือไม่'),
-    t('Ping.eu','https://ping.eu','รวม Ping, Traceroute, WHOIS, DNS Lookup และ Port Check',['Ping','DNS','WHOIS'],'ฟรี','ง่าย','Network Tools','ใช้ทดสอบ network พื้นฐานจากภายนอก เช่น ping, trace, whois และ port'),
-    t('MXToolbox SMTP','https://mxtoolbox.com/diagnostic.aspx','ทดสอบ SMTP Server แบบ Step-by-step',['SMTP','Email','Diagnostic'],'ฟรี','ปานกลาง','SMTP Tester','ใช้ตรวจว่า mail server ติดต่อได้ไหม มี TLS ไหม และตอบ SMTP ถูกต้องหรือไม่'),
-    t('EasyDMARC','https://easydmarc.com/tools/dmarc-lookup','วิเคราะห์ DMARC, DKIM, SPF, MX และ Blacklist',['DMARC','DKIM','SPF'],'ฟรี','ง่าย','Email Security','ใช้รวมเครื่องมือ email security หลายตัวไว้ในที่เดียว')
-  ]},
-  {id:'portscan',label:'Port Scan & WHOIS',icon:'scan',color:'c-orange',sub:'Port Scan, Traceroute, WHOIS, Nmap ออนไลน์',tools:[
-    t('HackerTarget Nmap','https://hackertarget.com/nmap-online-port-scanner/','Online Nmap Port Scanner สำหรับตรวจพอร์ตจากภายนอก',['Nmap','Port Scan','Security'],'ฟรี','ปานกลาง','Port Scanner','ใช้สแกนพอร์ตที่เปิดของ Server จากมุมมอง Internet'),
-    t('PortChecker.co','https://portchecker.co','ตรวจสอบว่า Port ของ IP หรือ Server เปิดจากภายนอกหรือไม่',['Port','Firewall','Network'],'ฟรี','ง่าย','Port Checker','ใช้เช็ก firewall rule หรือ port forwarding ว่าปล่อยพอร์ตสำเร็จไหม'),
-    t('WHOIS Lookup','https://www.whois.com/whois/','ค้นหาข้อมูล Domain, IP, Registrar, Name Server และวันหมดอายุ',['WHOIS','Domain','IP'],'ฟรี','ง่าย','WHOIS','ใช้ดูเจ้าของโดเมน registrar nameserver วันจดทะเบียน และวันหมดอายุ'),
-    t('Traceroute.org','https://www.traceroute.org','รวม Looking Glass สำหรับ Ping, Traceroute และ BGP จากหลาย ISP',['Traceroute','BGP','Looking Glass'],'ฟรี','ปานกลาง','Network','ใช้ตรวจเส้นทาง packet จาก network หรือ ISP หลายแห่งทั่วโลก'),
-    t('Shodan','https://www.shodan.io','Search Engine สำหรับอุปกรณ์และ Service ที่เชื่อมต่อ Internet',['IoT','Security','Search'],'ฟรีจำกัด','ปานกลาง','Security Search','ใช้ค้นหา service/device ที่ expose บน Internet และดู banner/version'),
-    t('HackerTarget WHOIS','https://hackertarget.com/whois-lookup/','WHOIS และ Reverse IP Lookup สำหรับงานตรวจสอบโดเมน/IP',['WHOIS','Reverse IP'],'ฟรี','ง่าย','WHOIS / Recon','ใช้ดู whois และ domain ที่อาจอยู่บน IP เดียวกัน'),
-    t('YouGetSignal','https://www.yougetsignal.com/tools/open-ports/','ตรวจ Open Port และ Reverse IP Lookup',['Port','Reverse IP'],'ฟรี','ง่าย','Port Checker','ใช้ตรวจพอร์ตแบบเร็วและดู reverse IP ของ hosting'),
-    t('Network-Tools.com','https://network-tools.com','รวม WHOIS, Traceroute, Ping, DNS และ HTTP Header Check',['Network','Ping','WHOIS'],'ฟรี','ง่าย','Network Toolbox','ใช้เป็นชุดเครื่องมือ network diagnostic พื้นฐานในหน้าเดียว')
-  ]},
-  {id:'asn',label:'ASN / BGP / IX',icon:'topology',color:'c-purple',sub:'ASN Lookup, BGP Route, Prefix, Internet Exchange',tools:[
-    t('BGP.he.net','https://bgp.he.net','Hurricane Electric BGP Toolkit ดู ASN, Prefix, Peer และ IX',['ASN','BGP','Routing'],'ฟรี','ปานกลาง','BGP Toolkit','ใช้วิเคราะห์ ASN, prefix, peer, upstream/downstream และ internet exchange'),
-    t('IPinfo.io','https://ipinfo.io','ดูข้อมูล IP, ASN, ISP, Geolocation และ Privacy Detection',['IP','ASN','Geolocation'],'ฟรี / API','ง่าย','IP Intelligence','ใช้ดูว่า IP เป็นของ ISP/องค์กรไหน อยู่ประเทศไหน และเป็น VPN/proxy ไหม'),
-    t('BGPView','https://bgpview.io','BGP Route, Prefix, ASN, Upstream และ Downstream Explorer',['ASN','BGP','Prefix'],'ฟรี','ง่าย','BGP Explorer','ใช้ดู route, prefix, AS path และความสัมพันธ์ของ provider'),
-    t('PeeringDB','https://www.peeringdb.com','ฐานข้อมูล Internet Exchange, Facility และ Peering Policy',['IX','Peering','BGP'],'ฟรี','ปานกลาง','Peering Database','ใช้ดูว่า network เชื่อมต่อ IX ไหน มี policy peering แบบใด'),
-    t('RIPE Stat','https://stat.ripe.net','ดูสถิติ BGP, RIR Data, RPKI และ Route History',['RIPE','BGP','Statistics'],'ฟรี','สูง','RIR Data','ใช้ดูข้อมูลเชิงลึกของ IP/ASN เช่น history, RPKI, abuse contact'),
-    t('ARIN WHOIS','https://search.arin.net/rdap/','ค้นหา IP Address และ ASN Registry สำหรับโซนอเมริกา',['ARIN','WHOIS','IP Registry'],'ฟรี','ง่าย','IP Registry','ใช้ตรวจข้อมูล registry ของ IP/ASN ในเขต ARIN'),
-    t('RouteViews','https://www.routeviews.org','ดู Global BGP Routing Table จาก Route Collector',['BGP','Route','Academic'],'ฟรี','สูง','BGP Collector','ใช้ดู routing table จริงจาก collector หลายจุดทั่วโลก'),
-    t('AS Rank','https://asrank.caida.org','จัดอันดับ ASN และดู Provider/Customer Relationship',['ASN','Rank','Research'],'ฟรี','ปานกลาง','BGP Research','ใช้ดูขนาดและความสำคัญของ ASN จาก customer cone')
-  ]},
-  {id:'ipleak',label:'IP / DNS / WebRTC Leak',icon:'shield',color:'c-red',sub:'ตรวจสอบ IP Leak, DNS Leak, WebRTC Leak',tools:[
-    t('ipleak.net','https://ipleak.net','ตรวจ IP, DNS, WebRTC และ Torrent IP Leak',['VPN','DNS Leak','WebRTC'],'ฟรี','ง่าย','Privacy Test','ใช้ตรวจว่า IP จริงหรือ DNS จริงรั่วออกไปเมื่อใช้ VPN หรือ proxy หรือไม่'),
-    t('BrowserLeaks','https://browserleaks.com','ตรวจ Browser Fingerprint, WebRTC, Canvas, WebGL และ Font Leak',['Browser','Fingerprint','Privacy'],'ฟรี','ปานกลาง','Browser Privacy','ใช้ดูข้อมูลที่ browser เปิดเผยและใช้ fingerprint ระบุตัวตน'),
-    t('DNS Leak Test','https://www.dnsleaktest.com','ทดสอบ DNS Leak แบบ Standard และ Extended',['DNS','VPN','Leak'],'ฟรี','ง่าย','DNS Test','ใช้ดูว่า DNS query ออกผ่าน DNS ของ VPN หรือหลุดไปที่ ISP'),
-    t('WhatIsMyIPAddress','https://whatismyipaddress.com','ดู Public IP, ISP, Location, Hostname และ Blacklist Status',['IP','ISP','Geolocation'],'ฟรี','ง่าย','IP Lookup','ใช้ดู IP ปัจจุบันและข้อมูล ISP/location แบบอ่านง่าย'),
-    t('Whoer.net','https://whoer.net','ตรวจ Anonymity Score, IP, DNS, Timezone และ WebRTC',['Anonymity','VPN','Privacy'],'ฟรี','ง่าย','Privacy Score','ใช้ประเมินความเป็นส่วนตัว เช่น timezone mismatch, DNS leak, WebRTC leak'),
-    t('Cloudflare Help','https://1.1.1.1/help','ตรวจ 1.1.1.1, DoH, DNSSEC และ ECH/ESNI',['Cloudflare','DoH','DNS'],'ฟรี','ง่าย','DNS Checker','ใช้ตรวจว่า browser/network ใช้ Cloudflare DNS และ DoH หรือไม่'),
-    t('IPLeak EU','https://www.ipleak.eu','ตรวจ IP และ DNS Leak จากมุมมอง EU Server',['IP Leak','DNS','EU'],'ฟรี','ง่าย','Privacy Test','ใช้เปรียบเทียบผล IP/DNS จาก server ในยุโรป'),
-    t('DoILeak','https://www.doileak.com','ตรวจ WebRTC, Java, Flash และ Browser Information Leak',['WebRTC','Privacy','Leak'],'ฟรี','ง่าย','Leak Detector','ใช้ตรวจช่องทาง leak ของ browser หลายแบบในหน้าเดียว')
-  ]},
-  {id:'dnsprop',label:'DNS Propagation',icon:'world',color:'c-teal',sub:'ตรวจสอบ DNS Propagation ทั่วโลก',tools:[
-    t('DNSChecker.org','https://dnschecker.org','เช็ก DNS Propagation จาก 100+ Location',['DNS','Propagation','Global'],'ฟรี','ง่าย','DNS Propagation','ใช้เช็กว่า DNS update กระจายไป resolver ทั่วโลกครบหรือยัง'),
-    t('WhatsMyDNS','https://www.whatsmydns.net','ตรวจ DNS Propagation ทุก Record Type',['DNS','Records','Global'],'ฟรี','ง่าย','DNS Check','ใช้ตรวจ record หลายชนิด เช่น A, AAAA, MX, CNAME, TXT, NS, CAA'),
-    t('ViewDNS.info','https://viewdns.info','รวม DNS Tools เช่น Reverse DNS, IP History, WHOIS และ Propagation',['DNS','WHOIS','IP History'],'ฟรี','ง่าย','DNS Toolbox','ใช้ตรวจ DNS, IP history, reverse IP และ report หลายแบบ'),
-    t('IntoDNS','https://intodns.com','วิเคราะห์ DNS Configuration พร้อม Error และ Warning',['DNS','Config','Analysis'],'ฟรี','ปานกลาง','DNS Analyzer','ใช้ตรวจปัญหา DNS config เช่น NS, SOA, MX, glue record'),
-    t('NS Lookup','https://www.nslookup.io','Online DNS Lookup รองรับหลาย Record Type',['DNS','Lookup','Records'],'ฟรี','ง่าย','DNS Lookup','ใช้ query DNS record แบบง่ายและอ่านผลเป็นระเบียบ'),
-    t('DNSViz','https://dnsviz.net','Visualize DNSSEC Chain แบบกราฟิก',['DNSSEC','DNS','Graph'],'ฟรี','สูง','DNSSEC Visualizer','ใช้ debug DNSSEC trust chain และ DS/DNSKEY error'),
-    t('MXToolbox DNS','https://mxtoolbox.com/DNSLookup.aspx','DNS Lookup ทุก Record Type พร้อม TTL และ Authoritative NS',['DNS','MXToolbox','TTL'],'ฟรี','ง่าย','DNS Lookup','ใช้ดูค่า DNS record และ TTL พร้อมลิงก์ไปเครื่องมืออื่น'),
-    t('DNS.Watch','https://dns.watch','Public DNS Resolver ที่เน้น Privacy และ No-Log',['DNS','Privacy','Public DNS'],'ฟรี','ง่าย','Public DNS','ใช้เป็นข้อมูล reference สำหรับ public DNS ที่ไม่เน้น tracking')
-  ]},
-  {id:'speed',label:'Speed & Latency',icon:'bolt',color:'c-yellow',sub:'ทดสอบความเร็วอินเทอร์เน็ต, Latency, Jitter',tools:[
-    t('Speedtest by Ookla','https://www.speedtest.net','วัด Download, Upload, Ping, Jitter และ Packet Loss',['Speed','Ping','Ookla'],'ฟรี','ง่าย','Speed Test','ใช้วัดความเร็ว internet มาตรฐานและเลือก server ทดสอบได้'),
-    t('Fast.com','https://fast.com','Speed Test แบบง่ายโดย Netflix CDN',['Speed','Netflix','CDN'],'ฟรี','ง่าย','Speed Test','ใช้วัด download speed แบบเร็วโดยอิง Netflix CDN'),
-    t('Cloudflare Speed','https://speed.cloudflare.com','วัด Speed, Latency Loaded/Unloaded, Jitter และ Packet Loss',['Cloudflare','Latency','Jitter'],'ฟรี','ง่าย','Speed Test','ใช้ดูคุณภาพเน็ตละเอียดกว่า speed test ปกติ โดยเฉพาะ latency under load'),
-    t('nPerf','https://www.nperf.com','Speed Test พร้อมเปรียบเทียบ ISP และดู Coverage Map',['Speed','ISP','Map'],'ฟรี','ง่าย','ISP Test','ใช้วัด speed และเทียบคุณภาพ ISP ในพื้นที่'),
-    t('Bandwidth Place','https://www.bandwidthplace.com','Speed Test ผ่าน Browser พร้อมเลือก Server ได้',['Speed','Bandwidth','Server'],'ฟรี','ง่าย','Speed Test','ใช้ทดสอบ bandwidth จาก server หลายจุด'),
-    t('Measurement Lab','https://speed.measurementlab.net','Open Source NDT Speed Test สำหรับงานวิจัย',['Open Source','NDT','Research'],'ฟรี','ง่าย','Speed Test','ใช้วัด speed แบบ open data และ protocol NDT'),
-    t('LibreSpeed','https://librespeed.org','HTML5 Speed Test แบบ Open Source และ Self-host ได้',['Open Source','HTML5','Self-host'],'ฟรี','ง่าย','Speed Test','ใช้ทดสอบ speed หรือเอา source ไป host เองได้'),
-    t('SpeedOf.Me','https://speedof.me','HTML5 Speed Test พร้อม Graph Real-time',['HTML5','CDN','Mobile'],'ฟรี','ง่าย','Speed Test','ใช้ดูกราฟ speed แบบ real-time เหมาะกับ browser/mobile')
-  ]},
-  {id:'multiping',label:'Multi-location Ping',icon:'map',color:'c-green',sub:'Ping และ Traceroute จากหลายประเทศทั่วโลก',tools:[
-    t('Uptrends Ping','https://www.uptrends.com/tools/ping-test','Ping จาก 220+ Location ทั่วโลก',['Ping','Global','Latency'],'ฟรี','ง่าย','Multi Ping','ใช้เช็ก latency/packet loss จากหลายเมืองทั่วโลก'),
-    t('Site24x7 Ping','https://www.site24x7.com/tools/online-ping.html','Ping และ Traceroute จากหลายประเทศ',['Ping','Traceroute','Global'],'ฟรี','ง่าย','Global Ping','ใช้ดู response time จากหลายประเทศและตรวจ route เบื้องต้น'),
-    t('Dotcom-Tools','https://www.dotcom-tools.com/ping-test','ทดสอบ Ping, Traceroute และ Web Performance จากหลายจุด',['Ping','Performance','Global'],'ฟรีจำกัด','ง่าย','Multi Ping','ใช้ตรวจ uptime/performance จาก checkpoint หลายประเทศ'),
-    t('Ping.pe','https://ping.pe','Ping, MTR และ TCP Ping จากหลายประเทศ',['Ping','MTR','TCP'],'ฟรี','ปานกลาง','Multi Ping','ใช้ตรวจปัญหา route/packet loss ด้วย ping และ mtr'),
-    t('KeyCDN Ping','https://tools.keycdn.com/ping','Ping จาก KeyCDN PoP ทั่วโลก',['CDN','Ping','Performance'],'ฟรี','ง่าย','CDN Test','ใช้ดู latency จาก node CDN หลาย region'),
-    t('Globalping','https://www.jsdelivr.com/globalping','Ping และ Traceroute จาก Community Probes ทั่วโลก',['Ping','Traceroute','API'],'ฟรี','ปานกลาง','Network Probe','ใช้ทดสอบ network จาก probe หลายแห่งและต่อยอด API ได้'),
-    t('CA App Synthetic','https://asm.ca.com/en/ping.php','Ping และ Monitor Response Time จากหลาย Location',['Ping','Monitor','Global'],'ฟรี','ง่าย','Monitor Ping','ใช้เช็ก response time จากจุด monitor ต่างประเทศ'),
-    t('Ping.Canopy','https://ping.canopy.tools','แสดง Latency Map แบบ Visual',['Ping','Latency','Map'],'ฟรี','ง่าย','Latency Map','ใช้ดู latency ในรูปแบบแผนที่เข้าใจง่าย')
-  ]},
-  {id:'ssl',label:'Nmap / SSL / Zone',icon:'cert',color:'c-pink',sub:'SSL Check, Zone Transfer, Online Nmap, Certificate',tools:[
-    t('SSL Labs','https://www.ssllabs.com/ssltest/','วิเคราะห์ SSL/TLS Configuration แบบละเอียดและให้ Grade',['SSL','TLS','Security'],'ฟรี','ปานกลาง','SSL Analyzer','ใช้ตรวจความแข็งแรงของ SSL/TLS, cipher, protocol และ certificate chain'),
-    t('SSL Shopper','https://www.sslshopper.com/ssl-checker.html','ตรวจ SSL Certificate, Chain และวันหมดอายุ',['SSL','Certificate','Chain'],'ฟรี','ง่าย','SSL Checker','ใช้ตรวจ certificate ว่าติดตั้งถูกไหม chain ครบไหม และหมดอายุเมื่อไร'),
-    t('DigiCert Tools','https://www.digicert.com/help/','SSL Checker, CSR Decoder และ Certificate Tools',['SSL','DigiCert','CSR'],'ฟรี','ง่าย','SSL Tools','ใช้ตรวจ SSL และถอด CSR/certificate สำหรับงาน certificate'),
-    t('CRT.sh','https://crt.sh','ค้น Certificate Transparency Logs ของโดเมน',['CT Log','Certificate','SSL'],'ฟรี','ปานกลาง','CT Log Search','ใช้ค้นหา subdomain/certificate ที่เคยออกให้โดเมน'),
-    t('HackerTarget SSL','https://hackertarget.com/ssl-check/','ตรวจ SSL Certificate และข้อมูลเบื้องต้น',['SSL','Certificate'],'ฟรี','ง่าย','SSL Checker','ใช้ดู SSL certificate แบบเร็วจากภายนอก'),
-    t('HackerTarget Zone','https://hackertarget.com/zone-transfer/','ทดสอบ DNS Zone Transfer สำหรับโดเมนที่มีสิทธิ์ตรวจสอบ',['DNS','AXFR','Zone Transfer'],'ฟรี','ปานกลาง','Security Test','ใช้ตรวจว่า DNS server เปิด AXFR เสี่ยงรั่วข้อมูลหรือไม่'),
-    t('TestSSL.sh Online','https://dev.ssllabs.com/ssltest/','SSL Labs Dev Instance สำหรับทดสอบ TLS/SSL',['SSL','TLS','Dev'],'ฟรี','ปานกลาง','SSL Test','ใช้ทดสอบ SSL/TLS คล้าย SSL Labs ใน instance dev'),
-    t('SSL2Buy Checker','https://www.ssl2buy.com/ssl-checker','ตรวจ SSL Certificate หลายโดเมนและวันหมดอายุ',['SSL','Multi-domain','Expiry'],'ฟรี','ง่าย','SSL Checker','ใช้ตรวจวันหมดอายุและรายละเอียด certificate หลายโดเมน')
-  ]}
+/* ─── Data ──────────────────────────────────────────────────────────── */
+const CATEGORIES = [
+  { id: 'dns',       icon: '🌐', label: 'DNS Tools' },
+  { id: 'whois',     icon: '🔍', label: 'WHOIS / Domain' },
+  { id: 'bgp',       icon: '🗺️',  label: 'BGP / Routing' },
+  { id: 'ip',        icon: '📡', label: 'IP / Geolocation' },
+  { id: 'leak',      icon: '🛡️',  label: 'IP Leak / Privacy' },
+  { id: 'speed',     icon: '⚡', label: 'Speed Test' },
+  { id: 'diag',      icon: '🔧', label: 'Network Diagnostics' },
+  { id: 'cert',      icon: '🔐', label: 'SSL / Certificates' },
+  { id: 'port',      icon: '🚪', label: 'Port Scanner' },
+  { id: 'email',     icon: '📧', label: 'Email / SPF / DKIM' },
 ];
 
-function t(name,url,desc,tags,pricing,difficulty,type,help){return{name,url,desc,tags,pricing,difficulty,type,help,color:''};}
+const TOOLS = [
+  /* DNS */
+  { id: 't01', cat: 'dns', icon: '🌐', name: 'MXToolbox DNS Lookup',   url: 'https://mxtoolbox.com/DNSLookup.aspx',          desc: 'ค้นหา DNS Record ทุกชนิด (A, MX, NS, TXT, CNAME)', tags: ['dns','lookup'],   functions: ['A Record','MX Record','NS Record','TXT Record','CNAME','SOA'] },
+  { id: 't02', cat: 'dns', icon: '🌐', name: 'DNS Checker',             url: 'https://dnschecker.org/',                        desc: 'ตรวจสอบ DNS Propagation จากหลาย Location ทั่วโลก',   tags: ['dns','propagation'], functions: ['Global DNS Check','A','MX','NS','TXT','AAAA'] },
+  { id: 't03', cat: 'dns', icon: '🌐', name: 'Google DNS Toolbox',      url: 'https://toolbox.googleapps.com/apps/dig/',       desc: 'DIG tool ของ Google ใช้งานง่าย ไม่ต้อง install',     tags: ['dns','dig'],      functions: ['DIG Query','A','MX','NS','TXT','CNAME','PTR'] },
+  { id: 't04', cat: 'dns', icon: '🌐', name: 'IntoDNS',                 url: 'https://intodns.com/',                           desc: 'วิเคราะห์ DNS configuration และหาปัญหาโดยอัตโนมัติ', tags: ['dns','analysis'], functions: ['NS Check','MX Check','DNS Health','SOA Check'] },
+  { id: 't05', cat: 'dns', icon: '🌐', name: 'ViewDNS.info',            url: 'https://viewdns.info/',                          desc: 'รวมเครื่องมือ DNS หลายอย่างในที่เดียว',              tags: ['dns','multi'],    functions: ['Reverse DNS','IP History','Ping','Traceroute','Whois'] },
 
-let currentPageIndex=0;
-let currentToolIndex=null;
-let currentUrl='';
-let currentView='tools';
-const $=(id)=>document.getElementById(id);
+  /* WHOIS */
+  { id: 't06', cat: 'whois', icon: '🔍', name: 'ICANN Lookup',          url: 'https://lookup.icann.org/',                      desc: 'WHOIS Official จาก ICANN ข้อมูลถูกต้องที่สุด',       tags: ['whois','domain'], functions: ['Domain WHOIS','Registrar Info','Expiry Date','Name Servers'] },
+  { id: 't07', cat: 'whois', icon: '🔍', name: 'Whois.domaintools.com', url: 'https://whois.domaintools.com/',                 desc: 'WHOIS พร้อม Reverse Lookup และ History',             tags: ['whois','history'], functions: ['WHOIS','Reverse IP','Domain History','DNS History'] },
+  { id: 't08', cat: 'whois', icon: '🔍', name: 'who.is',                url: 'https://who.is/',                                desc: 'WHOIS สะอาด อ่านง่าย พร้อม IP WHOIS',              tags: ['whois','ip'],     functions: ['Domain WHOIS','IP WHOIS','ASN Lookup'] },
+  { id: 't09', cat: 'whois', icon: '🔍', name: 'DomainBigData',         url: 'https://domainbigdata.com/',                     desc: 'ค้นหา Domain ที่ใช้ IP / NS เดียวกัน',              tags: ['whois','reverse'], functions: ['Reverse IP','Reverse NS','Domain Age','Host History'] },
 
-function applyColors(){PAGES.forEach(p=>p.tools.forEach(tool=>tool.color=p.color));}
-function totalTools(){return PAGES.reduce((sum,p)=>sum+p.tools.length,0);}
-function getUseCase(tool){return tool.help||tool.desc;}
-function getTabDoc(tool){return[
-  `รายละเอียด: แสดงชื่อเว็บ URL คำอธิบาย แท็ก ประเภท ราคา ความยาก และหมวดของ ${tool.name}`,
-  `ฟังก์ชัน: อธิบายว่า ${tool.name} ช่วยอะไร เหมาะใช้ตอนไหน และข้อมูลแต่ละช่องหมายถึงอะไร`,
-  `เปิดเว็บ: ทดลองเปิด ${tool.name} ใน iframe ถ้าเว็บบล็อกให้กด Tab ใหม่`
-];}
+  /* BGP */
+  { id: 't10', cat: 'bgp', icon: '🗺️', name: 'BGP.he.net',             url: 'https://bgp.he.net/',                            desc: 'Hurricane Electric BGP Toolkit ข้อมูล ASN/Prefix', tags: ['bgp','asn'],      functions: ['ASN Lookup','Prefix Lookup','Route Map','Peering','IPv6'] },
+  { id: 't11', cat: 'bgp', icon: '🗺️', name: 'BGPView',                url: 'https://bgpview.io/',                            desc: 'วิเคราะห์ BGP Route, ASN, Prefix แบบ Realtime',    tags: ['bgp','route'],    functions: ['ASN Info','IP Prefix','Peers','Upstreams','Downstreams','IXs'] },
+  { id: 't12', cat: 'bgp', icon: '🗺️', name: 'RIPE NCC RIPEstat',      url: 'https://stat.ripe.net/',                         desc: 'สถิติ BGP จาก RIPE NCC พร้อม Graph ย้อนหลัง',      tags: ['bgp','ripe'],     functions: ['Routing History','BGP Updates','RIS Peers','Visibility'] },
+  { id: 't13', cat: 'bgp', icon: '🗺️', name: 'PeeringDB',              url: 'https://www.peeringdb.com/',                     desc: 'ฐานข้อมูล Peering ของ Network และ IXP ทั่วโลก',    tags: ['bgp','peering'],  functions: ['Network Info','IXP','Facilities','Contacts'] },
 
-function buildNav(){
-  const nav=$('nav-list');
-  const toolItems=PAGES.map((page,index)=>`
-    <div class="nav-item ${currentView==='tools'&&index===currentPageIndex?'active':''}" onclick="selectPage(${index})">
-      <span class="nav-icon">${ICONS[page.icon]||'•'}</span>
-      <span class="nav-label">${page.label}</span>
-      <span class="nav-badge">${page.tools.length}</span>
-    </div>`).join('');
-  const docsItem=`
-    <div class="nav-item ${currentView==='functions'?'active':''}" onclick="selectFunctionPage()">
-      <span class="nav-icon">${ICONS.function}</span>
-      <span class="nav-label">ฟังก์ชัน Tools</span>
-      <span class="nav-badge">${totalTools()}</span>
-    </div>`;
-  nav.innerHTML=toolItems+docsItem;
-}
+  /* IP */
+  { id: 't14', cat: 'ip', icon: '📡', name: 'ipinfo.io',                url: 'https://ipinfo.io/',                             desc: 'ข้อมูล IP, ASN, ประเทศ, City, Org แบบ JSON',       tags: ['ip','geo'],       functions: ['IP Geolocation','ASN','Hostname','Org','Timezone','Map'] },
+  { id: 't15', cat: 'ip', icon: '📡', name: 'ip-api.com',               url: 'http://ip-api.com/',                             desc: 'Geolocation API ฟรี รวดเร็ว พร้อม Batch Mode',     tags: ['ip','api'],       functions: ['Country','Region','City','ISP','Lat/Lon','Timezone'] },
+  { id: 't16', cat: 'ip', icon: '📡', name: 'MaxMind GeoIP Demo',       url: 'https://www.maxmind.com/en/geoip-demo',          desc: 'ทดสอบ GeoIP Database ของ MaxMind',                  tags: ['ip','maxmind'],   functions: ['Country','City','Postal','ISP','Connection Type'] },
+  { id: 't17', cat: 'ip', icon: '📡', name: 'AbuseIPDB',                url: 'https://www.abuseipdb.com/',                     desc: 'ตรวจสอบว่า IP นั้นถูก Report ว่าเป็น Malicious',   tags: ['ip','abuse'],     functions: ['IP Reputation','Report History','Categories','Confidence Score'] },
+  { id: 't18', cat: 'ip', icon: '📡', name: 'Shodan',                   url: 'https://www.shodan.io/',                         desc: 'Search engine สำหรับ Internet-connected devices',   tags: ['ip','scan'],      functions: ['Port Scan','Banner','Services','Vulnerabilities','Org'] },
 
-function selectPage(index){
-  currentView='tools';
-  currentPageIndex=index;
-  currentToolIndex=null;
-  const page=PAGES[index];
-  $('page-title').textContent=page.label;
-  $('page-sub').textContent=page.sub;
-  $('grid-category-label').textContent=`${page.label} (${page.tools.length} tools)`;
+  /* Leak / Privacy */
+  { id: 't19', cat: 'leak', icon: '🛡️', name: 'ipleak.net',             url: 'https://ipleak.net/',                            desc: 'ตรวจ WebRTC Leak, DNS Leak, IPv6 Leak',            tags: ['leak','webrtc'],  functions: ['IP Leak','WebRTC Leak','DNS Leak','IPv6','Torrent Leak'] },
+  { id: 't20', cat: 'leak', icon: '🛡️', name: 'dnsleaktest.com',        url: 'https://www.dnsleaktest.com/',                   desc: 'ทดสอบ DNS Leak ทั้งแบบ Standard และ Extended',     tags: ['leak','dns'],     functions: ['Standard Test','Extended Test','DNS Server List'] },
+  { id: 't21', cat: 'leak', icon: '🛡️', name: 'browserleaks.com',       url: 'https://browserleaks.com/',                      desc: 'ตรวจสอบข้อมูล Browser ที่หลุดออกไปได้',            tags: ['leak','browser'], functions: ['WebRTC','Canvas','Font','WebGL','Geolocation','Features'] },
+  { id: 't22', cat: 'leak', icon: '🛡️', name: 'whatismyipaddress.com',  url: 'https://whatismyipaddress.com/',                  desc: 'เช็ค Public IP พร้อม Blacklist Check',              tags: ['leak','ip'],      functions: ['My IP','Blacklist Check','ISP Info','Map'] },
+
+  /* Speed Test */
+  { id: 't23', cat: 'speed', icon: '⚡', name: 'Speedtest by Ookla',    url: 'https://www.speedtest.net/',                     desc: 'วัด Download/Upload/Ping มาตรฐานจาก Ookla',        tags: ['speed','ookla'],  functions: ['Download','Upload','Ping','Jitter','Server Selection'] },
+  { id: 't24', cat: 'speed', icon: '⚡', name: 'Fast.com (Netflix)',     url: 'https://fast.com/',                              desc: 'วัด Download Speed จาก Netflix CDN เรียบง่าย',     tags: ['speed','netflix'], functions: ['Download Speed','Upload Speed','Latency'] },
+  { id: 't25', cat: 'speed', icon: '⚡', name: 'Cloudflare Speed Test',  url: 'https://speed.cloudflare.com/',                  desc: 'Speed Test จาก Cloudflare พร้อม Network Latency',  tags: ['speed','cf'],     functions: ['Download','Upload','Latency','Jitter','Packet Loss','Score'] },
+  { id: 't26', cat: 'speed', icon: '⚡', name: 'nperf Speed Test',       url: 'https://www.nperf.com/en/',                      desc: 'วัดความเร็วและคุณภาพ Internet พร้อม Map',          tags: ['speed','nperf'],  functions: ['Download','Upload','Ping','Route','Coverage Map'] },
+
+  /* Diagnostics */
+  { id: 't27', cat: 'diag', icon: '🔧', name: 'Network-Tools.com',      url: 'https://network-tools.com/',                     desc: 'Ping, Traceroute, NSLookup, Whois ในที่เดียว',     tags: ['diag','multi'],   functions: ['Ping','Traceroute','NSLookup','Whois','Finger','HTTP'] },
+  { id: 't28', cat: 'diag', icon: '🔧', name: 'UltraTools',             url: 'https://www.ultratools.com/',                    desc: 'เครื่องมือ Network Diagnostic ครอบคลุมที่สุด',     tags: ['diag','ultra'],   functions: ['DNS','WHOIS','Ping','Traceroute','BGP','Blacklist'] },
+  { id: 't29', cat: 'diag', icon: '🔧', name: 'Ping.eu',                url: 'https://ping.eu/',                               desc: 'Ping และ Port Scan จาก Server ในยุโรป',            tags: ['diag','ping'],    functions: ['Ping','Traceroute','Port Check','HTTP Headers','Whois'] },
+  { id: 't30', cat: 'diag', icon: '🔧', name: 'GlobalPing by jsDelivr', url: 'https://www.jsdelivr.com/globalping',            desc: 'Ping/Traceroute/DNS จาก Node ทั่วโลกแบบ Realtime', tags: ['diag','global'],  functions: ['Ping','Traceroute','DNS Resolve','HTTP','MTR'] },
+
+  /* SSL / Cert */
+  { id: 't31', cat: 'cert', icon: '🔐', name: 'SSL Labs (Qualys)',       url: 'https://www.ssllabs.com/ssltest/',               desc: 'ทดสอบ SSL/TLS Configuration ให้คะแนน A-F',        tags: ['ssl','grade'],    functions: ['TLS Version','Cipher Suites','HSTS','Certificate Chain','Grade'] },
+  { id: 't32', cat: 'cert', icon: '🔐', name: 'crt.sh',                 url: 'https://crt.sh/',                                desc: 'ค้นหา Certificate Transparency Log ทั้งหมด',       tags: ['ssl','ct'],       functions: ['Cert History','Subdomain Discovery','Issuer','Expiry'] },
+  { id: 't33', cat: 'cert', icon: '🔐', name: 'SSL Shopper Checker',    url: 'https://www.sslshopper.com/ssl-checker.html',    desc: 'ตรวจสอบ Certificate Chain และ Expiry Date',        tags: ['ssl','chain'],    functions: ['Chain Check','Expiry','Issuer','SANs','Protocol'] },
+  { id: 't34', cat: 'cert', icon: '🔐', name: 'Observatory (Mozilla)',  url: 'https://observatory.mozilla.org/',               desc: 'ตรวจสอบ Web Security Headers (HSTS, CSP, etc.)',   tags: ['ssl','headers'],  functions: ['Security Headers','HSTS','CSP','X-Frame','Cookies','Score'] },
+
+  /* Port Scanner */
+  { id: 't35', cat: 'port', icon: '🚪', name: 'YouGetSignal Port Check', url: 'https://www.yougetsignal.com/tools/open-ports/', desc: 'ตรวจสอบว่า Port เปิดอยู่หรือไม่จาก External',     tags: ['port','check'],   functions: ['Open Port Check','Common Ports','Custom Port'] },
+  { id: 't36', cat: 'port', icon: '🚪', name: 'CanYouSeeMe.org',        url: 'https://canyouseeme.org/',                       desc: 'เช็ค Port forwarding ว่า Outside เห็นได้ไหม',      tags: ['port','forward'], functions: ['Port Check','IP Detection'] },
+  { id: 't37', cat: 'port', icon: '🚪', name: 'Pentest-Tools Port Scan', url: 'https://pentest-tools.com/network-vulnerability-scanning/tcp-port-scanner-online-nmap', desc: 'Port Scan ด้วย Nmap Online', tags: ['port','nmap'], functions: ['TCP Scan','Service Detection','OS Detection','Top Ports'] },
+
+  /* Email */
+  { id: 't38', cat: 'email', icon: '📧', name: 'MXToolbox Email Health', url: 'https://mxtoolbox.com/emailhealth/',             desc: 'ตรวจสอบ SPF, DKIM, DMARC, Blacklist ครบครัน',     tags: ['email','spf'],    functions: ['SPF Check','DKIM','DMARC','MX Lookup','Blacklist','SMTP Diag'] },
+  { id: 't39', cat: 'email', icon: '📧', name: 'Mail-Tester.com',        url: 'https://www.mail-tester.com/',                   desc: 'ส่ง Email มาแล้วให้ Score ความน่าเชื่อถือ 1-10',  tags: ['email','score'],  functions: ['Spam Score','SPF','DKIM','DMARC','Content Analysis'] },
+  { id: 't40', cat: 'email', icon: '📧', name: 'DMARC Analyzer',         url: 'https://dmarcian.com/dmarc-inspector/',          desc: 'ตรวจสอบ DMARC Record และให้คำแนะนำ',              tags: ['email','dmarc'],  functions: ['DMARC Record','Policy','Alignment','Reporting URIs'] },
+];
+
+/* ─── State ─────────────────────────────────────────────────────────── */
+let state = {
+  category: null,
+  tool: null,
+  tab: 'info',
+  search: '',
+  favorites: JSON.parse(localStorage.getItem('ntpro_favs') || '[]'),
+  history: JSON.parse(localStorage.getItem('ntpro_history') || '[]'),
+  theme: localStorage.getItem('ntpro_theme') || 'dark',
+};
+
+/* ─── Init ──────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(state.theme);
   buildNav();
-  showGridView();
-  renderGrid();
+  renderFavNav();
+  // Select first category by default
+  selectCategory(CATEGORIES[0].id);
+});
+
+/* ─── Theme ─────────────────────────────────────────────────────────── */
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('theme-icon').textContent = theme === 'dark' ? '☀️' : '🌙';
+  state.theme = theme;
+  localStorage.setItem('ntpro_theme', theme);
 }
 
-function selectFunctionPage(){
-  currentView='functions';
-  currentToolIndex=null;
-  currentUrl='';
-  $('page-title').textContent='ฟังก์ชัน Tools';
-  $('page-sub').textContent='คู่มืออธิบายแต่ละเมนู แต่ละเว็บไซต์ และข้อมูลในแท็บว่าช่วยอะไร';
-  $('grid-category-label').textContent=`คู่มือ Tools ทั้งหมด (${totalTools()} websites)`;
-  buildNav();
-  showGridView();
-  renderFunctionPage();
+function toggleTheme() {
+  applyTheme(state.theme === 'dark' ? 'light' : 'dark');
 }
 
-function renderGrid(){
-  const page=PAGES[currentPageIndex];
-  $('tools-grid').className='grid';
-  $('tools-grid').innerHTML=page.tools.map((tool,index)=>`
-    <article class="tool-card" onclick="openDetail(${index})">
-      <div class="tool-top">
-        <div class="tool-icon ${tool.color}">${ICONS[page.icon]||'•'}</div>
-        <button class="btn ghost tool-open" onclick="event.stopPropagation();openDetail(${index});switchTab('iframe')">เปิด</button>
-      </div>
-      <div class="tool-name">${tool.name}</div>
-      <div class="tool-desc">${tool.desc}</div>
-      <div class="tool-url">${tool.url.replace(/^https?:\/\//,'')}</div>
-    </article>`).join('');
+/* ─── Mobile Sidebar ────────────────────────────────────────────────── */
+function openSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  sidebar.classList.add('open');
+  backdrop.style.display = 'block';
+  document.body.style.overflow = 'hidden';
 }
 
-function renderFunctionPage(){
-  $('tools-grid').className='function-grid';
-  const intro=`
-    <article class="function-card">
-      <code>ภาพรวมหน้าเว็บ</code>
-      <p>หน้านี้คือคู่มืออธิบายว่าเมนูด้านซ้ายแต่ละหมวดคืออะไร เว็บไซต์แต่ละตัวช่วยอะไร และข้อมูลในแท็บใช้ทำอะไร</p>
-      <ul>
-        <li>เมนูด้านซ้าย = หมวดเครื่องมือ Network</li>
-        <li>การ์ด = เว็บไซต์เครื่องมือที่ใช้ตรวจสอบจริง</li>
-        <li>badge ตัวเลข = จำนวนเว็บไซต์ในหมวดนั้น</li>
-      </ul>
-    </article>`;
-  const categoryCards=PAGES.map(page=>`
-    <article class="function-card">
-      <code>${ICONS[page.icon]||'•'} ${page.label}</code>
-      <p>${page.sub}</p>
-      <ul>
-        <li>มี ${page.tools.length} เว็บไซต์ในหมวดนี้</li>
-        <li>เหมาะสำหรับ: ${describeCategory(page.id)}</li>
-        <li>คลิกเมนูนี้เพื่อดูการ์ดเว็บไซต์ทั้งหมดในหมวด</li>
-      </ul>
-    </article>`).join('');
-  const toolCards=PAGES.flatMap(page=>page.tools.map(tool=>`
-    <article class="function-card">
-      <code>${tool.name}</code>
-      <p><b>ช่วยอะไร:</b> ${getUseCase(tool)}</p>
-      <ul>
-        <li><b>อยู่ในเมนู:</b> ${page.label}</li>
-        <li><b>ประเภท:</b> ${tool.type}</li>
-        <li><b>ราคา:</b> ${tool.pricing}</li>
-        <li><b>ความยาก:</b> ${tool.difficulty}</li>
-        <li><b>ข้อมูลในแท็บ:</b> รายละเอียด / ฟังก์ชัน / เปิดเว็บ</li>
-      </ul>
-    </article>`)).join('');
-  $('tools-grid').innerHTML=intro+categoryCards+toolCards;
+function closeSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  sidebar.classList.remove('open');
+  backdrop.style.display = 'none';
+  document.body.style.overflow = '';
 }
 
-function describeCategory(id){
-  const map={dns:'ตรวจ DNS และระบบ Email',portscan:'ตรวจ WHOIS, Port, Nmap และเส้นทาง Network',asn:'วิเคราะห์ ASN, BGP, Prefix และ Internet Exchange',ipleak:'ตรวจ IP Leak, DNS Leak, WebRTC และ Privacy',dnsprop:'ตรวจ DNS Propagation จากหลายประเทศ',speed:'วัด Speed, Latency, Jitter และ Packet Loss',multiping:'Ping/Traceroute จากหลาย location ทั่วโลก',ssl:'ตรวจ SSL/TLS, Certificate และ Zone Transfer'};
-  return map[id]||'Network Tools';
-}
-
-function openDetail(toolIndex){
-  currentToolIndex=toolIndex;
-  const tool=PAGES[currentPageIndex].tools[toolIndex];
-  currentUrl=tool.url;
-  $('grid-wrap').hidden=true;
-  $('detail-panel').hidden=false;
-  $('btn-back').hidden=false;
-  $('page-title').textContent=tool.name;
-  $('page-sub').textContent=tool.desc;
-  renderInfo();
-  renderFunctionDocs();
-  switchTab('info');
-}
-
-function renderInfo(){
-  const page=PAGES[currentPageIndex];
-  const tool=page.tools[currentToolIndex];
-  $('info-content').innerHTML=`
-    <div class="hero">
-      <div class="hero-icon ${tool.color}">${ICONS[page.icon]||'•'}</div>
-      <div>
-        <h2>${tool.name}</h2>
-        <div class="hero-url">${tool.url}</div>
-        <div class="tags">${tool.tags.map(tag=>`<span class="tag">${tag}</span>`).join('')}</div>
-      </div>
-    </div>
-    <div class="info-section"><h3>คำอธิบาย</h3><p>${tool.desc}</p></div>
-    <div class="info-section"><h3>ช่วยอะไร</h3><p>${getUseCase(tool)}</p></div>
-    <div class="meta-grid">
-      <div class="meta"><span>ประเภท</span><b>${tool.type}</b></div>
-      <div class="meta"><span>ราคา</span><b>${tool.pricing}</b></div>
-      <div class="meta"><span>ความยาก</span><b>${tool.difficulty}</b></div>
-      <div class="meta"><span>หมวด</span><b>${page.label}</b></div>
-    </div>
-    <div class="info-section" style="margin-top:18px"><h3>ข้อมูลในหน้านี้หมายถึงอะไร</h3>
-      <ul>
-        <li><b>ชื่อเว็บ:</b> เครื่องมือภายนอกที่ใช้ตรวจสอบ Network</li>
-        <li><b>URL:</b> ลิงก์ปลายทางของเว็บไซต์จริง</li>
-        <li><b>Tags:</b> คีย์เวิร์ดบอกว่าเว็บนี้เด่นเรื่องอะไร</li>
-        <li><b>ประเภท:</b> กลุ่มการใช้งาน เช่น WHOIS, DNS Lookup, Speed Test</li>
-        <li><b>ราคา:</b> ใช้ฟรีหรือมีข้อจำกัด/แผน Pro</li>
-        <li><b>ความยาก:</b> ระดับความเข้าใจที่ต้องใช้ก่อนอ่านผล</li>
-      </ul>
-    </div>
-    <button class="btn primary" onclick="openInNewTab()">เปิดเว็บจริง ↗</button>`;
-}
-
-function switchTab(tab){
-  ['info','functions','iframe'].forEach(name=>{
-    $('tab-'+name).classList.toggle('active',name===tab);
-    $('tab-'+name+'-btn').classList.toggle('active',name===tab);
+/* ─── Build Nav ─────────────────────────────────────────────────────── */
+function buildNav() {
+  const nav = document.getElementById('nav-list');
+  nav.innerHTML = '';
+  CATEGORIES.forEach(cat => {
+    const count = TOOLS.filter(t => t.cat === cat.id).length;
+    const el = document.createElement('div');
+    el.className = 'nav-item';
+    el.id = `nav-${cat.id}`;
+    el.innerHTML = `
+      <span class="nav-icon">${cat.icon}</span>
+      <span>${cat.label}</span>
+      <span class="nav-count">${count}</span>
+    `;
+    el.onclick = () => {
+      selectCategory(cat.id);
+      closeSidebar();
+    };
+    nav.appendChild(el);
   });
-  if(tab==='iframe'&&currentUrl&&$('main-iframe').src==='about:blank')loadIframe(currentUrl);
 }
 
-function renderFunctionDocs(){
-  const page=PAGES[currentPageIndex];
-  const tool=page.tools[currentToolIndex];
-  $('function-docs').innerHTML=`
-    <div class="function-card">
-      <code>${page.label}</code>
-      <p><b>เมนูนี้ช่วยอะไร:</b> ${describeCategory(page.id)}</p>
-      <ul>
-        <li>เป็นหมวดเครื่องมือด้านซ้าย</li>
-        <li>มี ${page.tools.length} เว็บในหมวดนี้</li>
-        <li>ใช้แยกประเภทงาน Network ให้หาเว็บง่ายขึ้น</li>
-      </ul>
-    </div>
-    <div class="function-card">
-      <code>${tool.name}</code>
-      <p><b>เว็บไซต์นี้ช่วยอะไร:</b> ${getUseCase(tool)}</p>
-      <ul>
-        <li><b>URL:</b> ${tool.url}</li>
-        <li><b>ประเภท:</b> ${tool.type}</li>
-        <li><b>Tags:</b> ${tool.tags.join(', ')}</li>
-      </ul>
-    </div>
-    <div class="function-card">
-      <code>แท็บในหน้านี้</code>
-      <p>อธิบายว่าแต่ละแท็บใช้ทำอะไรเมื่อกดเข้ามาที่ ${tool.name}</p>
-      <ul>${getTabDoc(tool).map(item=>`<li>${item}</li>`).join('')}</ul>
-    </div>
-    <div class="function-card">
-      <code>ข้อควรรู้เรื่อง iframe</code>
-      <p>บางเว็บอาจไม่ยอมแสดงในกรอบ iframe เพราะตั้งค่าความปลอดภัยไว้</p>
-      <ul>
-        <li>ถ้า iframe โหลดไม่ขึ้น ให้กด Tab ใหม่</li>
-        <li>การเปิดใน Tab ใหม่คือการไปยังเว็บจริงโดยตรง</li>
-        <li>ควรใช้เครื่องมือกับระบบหรือโดเมนที่มีสิทธิ์ตรวจสอบเท่านั้น</li>
-      </ul>
-    </div>`;
-}
+/* ─── Favorites Nav ─────────────────────────────────────────────────── */
+function renderFavNav() {
+  const section = document.getElementById('favorites-section');
+  const nav = document.getElementById('fav-nav-list');
+  const favTools = TOOLS.filter(t => state.favorites.includes(t.id));
 
-function loadIframe(url){
-  currentUrl=url;
-  $('iframe-url-display').textContent=url;
-  $('iframe-loading').hidden=false;
-  $('iframe-blocked').hidden=true;
-  $('main-iframe').style.display='block';
-  $('main-iframe').src=url;
-  clearTimeout(window.iframeTimer);
-  window.iframeTimer=setTimeout(()=>{
-    if(!$('iframe-loading').hidden){
-      $('iframe-loading').hidden=true;
-      $('main-iframe').style.display='none';
-      $('iframe-blocked').hidden=false;
-    }
-  },8000);
-}
-
-function iframeLoaded(){
-  clearTimeout(window.iframeTimer);
-  $('iframe-loading').hidden=true;
-  $('main-iframe').style.display='block';
-}
-
-function openCurrentTool(){
-  if(currentView==='functions')return;
-  if(currentToolIndex===null){
-    const first=PAGES[currentPageIndex].tools[0];
-    window.open(first.url,'_blank','noopener');
+  if (favTools.length === 0) {
+    section.hidden = true;
     return;
   }
-  openInNewTab();
+  section.hidden = false;
+  nav.innerHTML = '';
+  favTools.forEach(tool => {
+    const el = document.createElement('div');
+    el.className = 'nav-item';
+    el.innerHTML = `<span class="nav-icon">${tool.icon}</span><span>${tool.name}</span>`;
+    el.onclick = () => { openTool(tool); closeSidebar(); };
+    nav.appendChild(el);
+  });
 }
 
-function openInNewTab(){if(currentUrl)window.open(currentUrl,'_blank','noopener');}
-function reloadIframe(){if(currentUrl)loadIframe(currentUrl);}
-function backToGrid(){currentToolIndex=null;showGridView();if(currentView==='functions'){selectFunctionPage();return;}const page=PAGES[currentPageIndex];$('page-title').textContent=page.label;$('page-sub').textContent=page.sub;}
-function showGridView(){$('grid-wrap').hidden=false;$('detail-panel').hidden=true;$('btn-back').hidden=true;}
+/* ─── Category ──────────────────────────────────────────────────────── */
+function selectCategory(catId) {
+  state.category = catId;
+  state.tool = null;
 
-applyColors();
-buildNav();
-selectPage(0);
+  // Update nav active
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const navEl = document.getElementById(`nav-${catId}`);
+  if (navEl) navEl.classList.add('active');
+
+  const cat = CATEGORIES.find(c => c.id === catId);
+  const tools = TOOLS.filter(t => t.cat === catId);
+
+  // Update topbar
+  document.getElementById('page-title').textContent = `${cat.icon} ${cat.label}`;
+  document.getElementById('page-sub').textContent = `${tools.length} เครื่องมือ`;
+
+  // Show grid
+  showGridView();
+  renderGrid(tools);
+}
+
+/* ─── Grid ──────────────────────────────────────────────────────────── */
+function renderGrid(tools, container = document.getElementById('tools-grid'), labelEl = document.getElementById('grid-category-label')) {
+  container.innerHTML = '';
+
+  if (tools.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🔭</div>
+        <p>ไม่พบเครื่องมือที่ตรงกับการค้นหา</p>
+      </div>`;
+    return;
+  }
+
+  tools.forEach(tool => {
+    const isFav = state.favorites.includes(tool.id);
+    const card = document.createElement('div');
+    card.className = 'tool-card';
+    card.innerHTML = `
+      <button class="tool-card-fav ${isFav ? 'active' : ''}" title="${isFav ? 'ลบออกจากรายการโปรด' : 'เพิ่มในรายการโปรด'}" onclick="event.stopPropagation();toggleFavorite('${tool.id}',this)">
+        ${isFav ? '⭐' : '☆'}
+      </button>
+      <div class="tool-card-icon">${tool.icon}</div>
+      <div class="tool-card-name">${tool.name}</div>
+      <div class="tool-card-desc">${tool.desc}</div>
+      <div class="tool-card-tag">${tool.tags[0]}</div>
+    `;
+    card.addEventListener('click', () => openTool(tool));
+    container.appendChild(card);
+  });
+}
+
+/* ─── Show / Hide Panels ────────────────────────────────────────────── */
+function showGridView() {
+  document.getElementById('grid-wrap').hidden = false;
+  document.getElementById('detail-panel').hidden = true;
+  document.getElementById('search-results-wrap').hidden = true;
+  document.getElementById('btn-back').hidden = true;
+}
+
+function showDetailView() {
+  document.getElementById('grid-wrap').hidden = true;
+  document.getElementById('search-results-wrap').hidden = true;
+  document.getElementById('detail-panel').hidden = false;
+  document.getElementById('btn-back').hidden = false;
+}
+
+function backToGrid() {
+  if (state.search) {
+    showSearchResults(state.search);
+  } else {
+    selectCategory(state.category || CATEGORIES[0].id);
+  }
+}
+
+/* ─── Open Tool ─────────────────────────────────────────────────────── */
+function openTool(tool) {
+  state.tool = tool;
+
+  // Update topbar
+  document.getElementById('page-title').textContent = tool.name;
+  document.getElementById('page-sub').textContent = tool.url;
+
+  // Track history
+  state.history = [tool.id, ...state.history.filter(id => id !== tool.id)].slice(0, 20);
+  localStorage.setItem('ntpro_history', JSON.stringify(state.history));
+
+  // Build Info tab
+  const isFav = state.favorites.includes(tool.id);
+  document.getElementById('info-content').innerHTML = `
+    <div class="tool-title">
+      <span>${tool.icon}</span> ${tool.name}
+    </div>
+    <div class="tool-url">${tool.url}</div>
+    <div class="tool-desc">${tool.desc}</div>
+    <div class="tags">${tool.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+    <div class="action-row">
+      <button class="btn primary" onclick="switchTab('iframe')">🌐 เปิดในแอป</button>
+      <button class="btn ghost" onclick="openInNewTab()">↗ Tab ใหม่</button>
+      <button class="btn ghost" onclick="copyCurrentUrl()">📋 คัดลอก URL</button>
+      <button class="btn ghost" id="info-fav-btn" onclick="toggleFavoriteFromInfo()">
+        ${isFav ? '⭐ ลบจากโปรด' : '☆ เพิ่มในโปรด'}
+      </button>
+    </div>
+  `;
+
+  // Build Functions tab
+  document.getElementById('function-docs').innerHTML = (tool.functions || []).map(fn => `
+    <div class="function-item">
+      <div class="function-item-name">✅ ${fn}</div>
+    </div>
+  `).join('');
+
+  // Reset iframe
+  const iframe = document.getElementById('main-iframe');
+  iframe.src = 'about:blank';
+  document.getElementById('iframe-url-display').textContent = tool.url;
+  document.getElementById('iframe-loading').style.display = 'none';
+  document.getElementById('iframe-blocked').hidden = true;
+
+  switchTab('info');
+  showDetailView();
+}
+
+/* ─── Tabs ──────────────────────────────────────────────────────────── */
+function switchTab(tabName) {
+  state.tab = tabName;
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById(`tab-${tabName}-btn`).classList.add('active');
+  document.getElementById(`tab-${tabName}`).classList.add('active');
+
+  if (tabName === 'iframe' && state.tool) {
+    loadIframe(state.tool.url);
+  }
+}
+
+/* ─── Iframe ────────────────────────────────────────────────────────── */
+function loadIframe(url) {
+  const iframe = document.getElementById('main-iframe');
+  const loading = document.getElementById('iframe-loading');
+  const blocked = document.getElementById('iframe-blocked');
+
+  iframe.src = 'about:blank';
+  blocked.hidden = true;
+  loading.style.display = 'flex';
+
+  setTimeout(() => {
+    iframe.src = url;
+  }, 100);
+
+  // Timeout fallback — if 8s pass and still loading, assume blocked
+  clearTimeout(window._iframeTimeout);
+  window._iframeTimeout = setTimeout(() => {
+    if (loading.style.display !== 'none') {
+      loading.style.display = 'none';
+      blocked.hidden = false;
+    }
+  }, 8000);
+}
+
+function iframeLoaded() {
+  const iframe = document.getElementById('main-iframe');
+  const loading = document.getElementById('iframe-loading');
+  const blocked = document.getElementById('iframe-blocked');
+  clearTimeout(window._iframeTimeout);
+
+  // Try to detect if it's actually blocked (blank page after load)
+  try {
+    const loc = iframe.contentWindow.location.href;
+    if (loc === 'about:blank') return; // ignore initial blank
+  } catch(e) {
+    // Cross-origin: cannot read — means it loaded, probably OK
+  }
+
+  loading.style.display = 'none';
+  blocked.hidden = true;
+}
+
+function iframeError() {
+  clearTimeout(window._iframeTimeout);
+  document.getElementById('iframe-loading').style.display = 'none';
+  document.getElementById('iframe-blocked').hidden = false;
+}
+
+function reloadIframe() {
+  if (state.tool) loadIframe(state.tool.url);
+}
+
+function openInNewTab() {
+  if (state.tool) window.open(state.tool.url, '_blank', 'noopener,noreferrer');
+}
+
+function openCurrentTool() {
+  if (state.tool) {
+    window.open(state.tool.url, '_blank', 'noopener,noreferrer');
+  }
+}
+
+/* ─── Copy URL ──────────────────────────────────────────────────────── */
+function copyCurrentUrl() {
+  if (!state.tool) return;
+  navigator.clipboard.writeText(state.tool.url).then(() => {
+    showToast('✅', 'คัดลอก URL แล้ว');
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = state.tool.url;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+    showToast('✅', 'คัดลอก URL แล้ว');
+  });
+}
+
+/* ─── Toast ─────────────────────────────────────────────────────────── */
+let toastEl = null;
+let toastTimer = null;
+
+function showToast(icon, message, type = 'success') {
+  if (!toastEl) {
+    toastEl = document.createElement('div');
+    toastEl.className = 'toast';
+    document.body.appendChild(toastEl);
+  }
+  toastEl.innerHTML = `<span class="toast-icon">${icon}</span> ${message}`;
+  toastEl.className = `toast ${type}`;
+
+  // Force reflow
+  void toastEl.offsetWidth;
+  toastEl.classList.add('show');
+
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toastEl.classList.remove('show');
+  }, 2500);
+}
+
+/* ─── Favorites ─────────────────────────────────────────────────────── */
+function toggleFavorite(toolId, btnEl) {
+  const idx = state.favorites.indexOf(toolId);
+  if (idx === -1) {
+    state.favorites.push(toolId);
+    btnEl.classList.add('active');
+    btnEl.textContent = '⭐';
+    btnEl.title = 'ลบออกจากรายการโปรด';
+    showToast('⭐', 'เพิ่มในรายการโปรดแล้ว');
+  } else {
+    state.favorites.splice(idx, 1);
+    btnEl.classList.remove('active');
+    btnEl.textContent = '☆';
+    btnEl.title = 'เพิ่มในรายการโปรด';
+    showToast('🗑️', 'ลบออกจากรายการโปรดแล้ว');
+  }
+  localStorage.setItem('ntpro_favs', JSON.stringify(state.favorites));
+  renderFavNav();
+}
+
+function toggleFavoriteFromInfo() {
+  if (!state.tool) return;
+  const toolId = state.tool.id;
+  const idx = state.favorites.indexOf(toolId);
+  const btn = document.getElementById('info-fav-btn');
+  if (idx === -1) {
+    state.favorites.push(toolId);
+    if (btn) btn.innerHTML = '⭐ ลบจากโปรด';
+    showToast('⭐', 'เพิ่มในรายการโปรดแล้ว');
+  } else {
+    state.favorites.splice(idx, 1);
+    if (btn) btn.innerHTML = '☆ เพิ่มในโปรด';
+    showToast('🗑️', 'ลบออกจากรายการโปรดแล้ว');
+  }
+  localStorage.setItem('ntpro_favs', JSON.stringify(state.favorites));
+  renderFavNav();
+}
+
+/* ─── Search ────────────────────────────────────────────────────────── */
+function handleSearch(query) {
+  state.search = query.trim();
+  const clearBtn = document.getElementById('search-clear');
+  clearBtn.hidden = !state.search;
+
+  if (!state.search) {
+    // Restore previous category view
+    if (state.category) selectCategory(state.category);
+    return;
+  }
+
+  showSearchResults(state.search);
+}
+
+function showSearchResults(query) {
+  const q = query.toLowerCase();
+  const results = TOOLS.filter(t =>
+    t.name.toLowerCase().includes(q) ||
+    t.desc.toLowerCase().includes(q) ||
+    t.tags.some(tag => tag.includes(q)) ||
+    (t.functions || []).some(fn => fn.toLowerCase().includes(q))
+  );
+
+  // Update topbar
+  document.getElementById('page-title').textContent = `🔍 ค้นหา: "${query}"`;
+  document.getElementById('page-sub').textContent = `พบ ${results.length} เครื่องมือ`;
+
+  // Show search results panel
+  document.getElementById('grid-wrap').hidden = true;
+  document.getElementById('detail-panel').hidden = true;
+  document.getElementById('search-results-wrap').hidden = false;
+  document.getElementById('btn-back').hidden = true;
+
+  document.getElementById('search-results-label').textContent = `พบ ${results.length} รายการสำหรับ "${query}"`;
+
+  const grid = document.getElementById('search-results-grid');
+  renderGrid(results, grid, document.getElementById('search-results-label'));
+
+  // Highlight matching text in cards
+  if (results.length > 0) {
+    grid.querySelectorAll('.tool-card-name, .tool-card-desc').forEach(el => {
+      el.innerHTML = el.innerHTML.replace(
+        new RegExp(`(${escapeRegex(query)})`, 'gi'),
+        '<mark class="highlight">$1</mark>'
+      );
+    });
+  }
+}
+
+function clearSearch() {
+  const input = document.getElementById('tool-search');
+  input.value = '';
+  handleSearch('');
+  input.focus();
+}
+
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/* ─── Keyboard shortcuts ────────────────────────────────────────────── */
+document.addEventListener('keydown', e => {
+  // Ctrl/Cmd + K → focus search
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    const input = document.getElementById('tool-search');
+    input.focus();
+    input.select();
+  }
+  // Escape → clear search or close sidebar
+  if (e.key === 'Escape') {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('open')) {
+      closeSidebar();
+    } else {
+      clearSearch();
+    }
+  }
+});

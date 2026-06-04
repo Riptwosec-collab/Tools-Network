@@ -1,0 +1,14 @@
+/* TEAM */
+Developer: Riptwosec-collab
+GitHub: https://github.com/Riptwosec-collab
+Site: https://tools-network.vercel.app
+
+/* THANKS */
+Fonts: IBM Plex Sans Thai, IBM Plex Mono (Google Fonts)
+Hosting: Vercel
+Tools: 54 network tools aggregated from public sources
+
+/* SITE */
+Last update: 2025
+Language: Thai / English
+Standards: HTML5, CSS3, Vanilla JS, PWA

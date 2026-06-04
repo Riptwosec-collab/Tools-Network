@@ -8,10 +8,11 @@
   <meta property="og:url" content="https://tools-network.vercel.app/">
   <meta property="og:title" content="NetTools Pro — Network Dashboard">
   <meta property="og:description" content="รวมเครื่องมือ Network สำหรับ DNS, WHOIS, BGP, IP Leak, Speed Test และ Network Diagnostics ในที่เดียว">
-  <meta property="og:image" content="https://tools-network.vercel.app/og-image.png">
+  <meta property="og:image" content="https://tools-network.vercel.app/og-image.svg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="NetTools Pro — Network Dashboard">
   <meta name="twitter:description" content="รวมเครื่องมือ Network ในที่เดียว">
+  <meta name="twitter:image" content="https://tools-network.vercel.app/og-image.svg">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; frame-src *;">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2310b981'/><text x='16' y='22' text-anchor='middle' font-size='18' font-family='monospace' fill='white'>⌘</text></svg>">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2310b981'/><text x='16' y='22' text-anchor='middle' font-size='18' font-family='monospace' fill='white'>⌘</text></svg>">
@@ -26,7 +27,7 @@
   <noscript>
     <div style="padding:2rem;text-align:center;font-family:sans-serif;background:#1a1a1a;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;">
       <h2>⚠️ JavaScript ถูกปิดใช้งาน</h2>
-      <p>NetTools Pro ต้องการ JavaScript เพื่อแสดงเครื่องมือ กรุณาเปิดใช้งาน JavaScript ในเบราว์เซอร์ของคุณ</p>
+      <p>NetTools Pro ต้องการ JavaScript กรุณาเปิดใช้งานใน browser</p>
     </div>
   </noscript>
 
@@ -51,16 +52,22 @@
 
       <nav class="nav-list" id="nav-list"></nav>
 
-      <!-- Recent Tools -->
       <div class="sidebar-section" id="recent-section" hidden>
         <div class="sidebar-section-title">🕐 เปิดล่าสุด</div>
         <nav class="nav-list fav-nav" id="recent-nav-list"></nav>
       </div>
 
-      <!-- Favorites -->
       <div class="sidebar-section" id="favorites-section" hidden>
         <div class="sidebar-section-title">⭐ รายการโปรด</div>
         <nav class="nav-list fav-nav" id="fav-nav-list"></nav>
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="sidebar-footer-btn" onclick="showStats()" title="Stats Dashboard">📊 Stats</button>
+        <button class="sidebar-footer-btn" onclick="showChangelog()" title="What's New">🆕 Changelog</button>
+        <button class="sidebar-footer-btn" onclick="exportData()" title="Export Data">💾 Export</button>
+        <button class="sidebar-footer-btn" onclick="document.getElementById('import-input').click()" title="Import Data">📂 Import</button>
+        <input type="file" id="import-input" accept=".json" style="display:none" onchange="importData(event)">
       </div>
     </aside>
 
@@ -76,7 +83,8 @@
           </div>
         </div>
         <div class="actions">
-          <button class="btn ghost icon-btn" onclick="showCompare()" title="Compare Mode" id="compare-btn">⚖️</button>
+          <button class="btn ghost icon-btn" onclick="randomTool()" title="สุ่ม Tool 🎲" aria-label="สุ่ม Tool">🎲</button>
+          <button class="btn ghost icon-btn" onclick="showCompare()" title="Compare Mode">⚖️</button>
           <button class="btn ghost icon-btn" onclick="showSubnetCalc()" title="Subnet Calculator">🧮</button>
           <button class="btn ghost icon-btn" id="theme-toggle" onclick="toggleTheme()" title="สลับธีม"><span id="theme-icon">☀️</span></button>
           <button class="btn ghost" id="btn-back" onclick="backToGrid()" hidden>← กลับ</button>
@@ -84,7 +92,7 @@
         </div>
       </header>
 
-      <!-- Quick Launch / Pinned Bar -->
+      <!-- Quick Launch Bar -->
       <div class="quickbar" id="quickbar" hidden>
         <span class="quickbar-label">📌 Pinned</span>
         <div class="quickbar-list" id="quickbar-list"></div>
@@ -122,12 +130,10 @@
           <button class="tab-btn" id="tab-functions-btn" onclick="switchTab('functions')">ฟังก์ชัน</button>
           <button class="tab-btn" id="tab-iframe-btn" onclick="switchTab('iframe')">เปิดเว็บ</button>
         </div>
-        <div class="tab-content active" id="tab-info">
-          <div class="scroll" id="info-content"></div>
-        </div>
+        <div class="tab-content active" id="tab-info"><div class="scroll" id="info-content"></div></div>
         <div class="tab-content" id="tab-functions">
           <div class="scroll">
-            <div class="section-title">คำอธิบายฟังก์ชัน / เมนู / ข้อมูลในหน้านี้</div>
+            <div class="section-title">ฟังก์ชันและเมนูในเว็บไซต์นี้</div>
             <div class="function-grid" id="function-docs"></div>
           </div>
         </div>
@@ -145,8 +151,9 @@
               sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
               onload="iframeLoaded()" onerror="iframeError()"></iframe>
             <div class="blocked" id="iframe-blocked" hidden>
-              <h3>🚫 เว็บไซต์นี้ไม่อนุญาตให้เปิดใน iframe</h3>
-              <p>บางเว็บตั้งค่า X-Frame-Options หรือ CSP ไว้ ให้กดเปิดใน Tab ใหม่แทน</p>
+              <div class="blocked-icon">🚫</div>
+              <h3>เว็บไซต์นี้ไม่อนุญาตให้เปิดใน iframe</h3>
+              <p>บางเว็บตั้งค่า X-Frame-Options หรือ CSP ไว้ ให้เปิดใน Tab ใหม่แทน</p>
               <button class="btn primary" onclick="openInNewTab()">เปิดใน Tab ใหม่ ↗</button>
             </div>
           </div>
@@ -156,21 +163,17 @@
       <!-- Compare Mode -->
       <section class="compare-panel" id="compare-panel" hidden>
         <div class="compare-header">
-          <h2>⚖️ Compare Mode — เปิด 2 เครื่องมือพร้อมกัน</h2>
+          <h2>⚖️ Compare Mode</h2>
           <button class="btn ghost" onclick="hideCompare()">✕ ปิด</button>
         </div>
         <div class="compare-selectors">
           <div class="compare-select-wrap">
             <label>เครื่องมือที่ 1</label>
-            <select id="compare-select-a" onchange="loadCompareFrame('a')">
-              <option value="">-- เลือกเครื่องมือ --</option>
-            </select>
+            <select id="compare-select-a" onchange="loadCompareFrame('a')"><option value="">-- เลือกเครื่องมือ --</option></select>
           </div>
           <div class="compare-select-wrap">
             <label>เครื่องมือที่ 2</label>
-            <select id="compare-select-b" onchange="loadCompareFrame('b')">
-              <option value="">-- เลือกเครื่องมือ --</option>
-            </select>
+            <select id="compare-select-b" onchange="loadCompareFrame('b')"><option value="">-- เลือกเครื่องมือ --</option></select>
           </div>
         </div>
         <div class="compare-frames">
@@ -198,9 +201,7 @@
             <h2>🧮 Subnet / CIDR Calculator</h2>
             <button class="btn ghost" onclick="hideSubnetCalc()">✕ ปิด</button>
           </div>
-          <div class="subnet-input-row">
-            <input type="text" id="subnet-input" placeholder="192.168.1.0/24 หรือ 10.0.0.1/255.255.255.0" class="subnet-input" oninput="calcSubnet(this.value)">
-          </div>
+          <input type="text" id="subnet-input" class="subnet-input" placeholder="192.168.1.0/24 หรือ 10.0.0.1/255.255.255.0" oninput="calcSubnet(this.value)">
           <div class="subnet-results" id="subnet-results"></div>
           <div class="subnet-examples">
             <span class="section-title">ตัวอย่าง:</span>
@@ -212,11 +213,65 @@
           </div>
         </div>
       </section>
+
+      <!-- Stats Dashboard -->
+      <section class="stats-panel" id="stats-panel" hidden>
+        <div class="scroll">
+          <div class="panel-header">
+            <h2>📊 Stats Dashboard</h2>
+            <button class="btn ghost" onclick="hideStats()">✕ ปิด</button>
+          </div>
+          <div id="stats-content"></div>
+        </div>
+      </section>
+
+      <!-- Changelog -->
+      <section class="stats-panel" id="changelog-panel" hidden>
+        <div class="scroll">
+          <div class="panel-header">
+            <h2>🆕 Changelog — What's New</h2>
+            <button class="btn ghost" onclick="hideChangelog()">✕ ปิด</button>
+          </div>
+          <div id="changelog-content"></div>
+        </div>
+      </section>
     </main>
   </div>
 
   <!-- Toast -->
   <div class="toast" id="toast"></div>
+
+  <!-- Tool Request Modal -->
+  <div class="modal-backdrop" id="modal-backdrop" hidden onclick="closeModal()"></div>
+  <div class="modal" id="tool-request-modal" hidden>
+    <div class="modal-header">
+      <h3>💡 แนะนำเครื่องมือใหม่</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc">แนะนำเครื่องมือที่อยากให้เพิ่มใน NetTools Pro — จะเปิด GitHub Issue ให้อัตโนมัติ</p>
+      <div class="form-group">
+        <label>ชื่อเครื่องมือ</label>
+        <input type="text" id="req-name" placeholder="เช่น Shodan, Censys...">
+      </div>
+      <div class="form-group">
+        <label>URL ของเว็บไซต์</label>
+        <input type="url" id="req-url" placeholder="https://...">
+      </div>
+      <div class="form-group">
+        <label>หมวดหมู่</label>
+        <select id="req-cat"></select>
+      </div>
+      <div class="form-group">
+        <label>รายละเอียดเพิ่มเติม</label>
+        <textarea id="req-desc" placeholder="ใช้ทำอะไร มีประโยชน์ยังไง..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn ghost" onclick="closeModal()">ยกเลิก</button>
+      <button class="btn primary" onclick="submitToolRequest()">📨 ส่งคำขอผ่าน GitHub</button>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
